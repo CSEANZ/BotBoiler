@@ -1,9 +1,9 @@
 
-
+import * as builder from 'botbuilder';
 import { injectable, inject } from "inversify";
 import * as contracts from "../contract/contracts";
 import { serviceBase } from "./serviceBase";
-import * as builder from 'botbuilder';
+
 
 @injectable()
 export class botService extends serviceBase implements contracts.IBotService {

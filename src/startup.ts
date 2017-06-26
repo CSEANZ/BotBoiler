@@ -1,34 +1,73 @@
 import "reflect-metadata";
 import { Container } from "inversify"
-import { ILogService, contractSymbols, IHostService, IBotService } from "./contract/contracts";
+import * as contracts from "./contract/contracts";
 
 import { logService } from "./services/system/logService";
 import { serverHelper } from "./helpers/serverHelper";
 import { localHostService } from "./services/system/host/localHostService";
 import { IConfig, serverTypes } from "./contract/systemEntities";
 import { botService } from "./services/botService";
+import * as dialogs  from "./dialogs/dialogIndex";
 
 export default class startup {
 
     public container: Container;
     private _config: IConfig;
 
-    private _botService: IBotService;
+    private _botService: contracts.IBotService;
 
     constructor() {
         this.container = new Container();
 
         this._setupSystemServices();
         this._setupHostService();
-
+        this._registerDialogs();
         //Your services registered here      
     }  
 
-    public get botService():IBotService{
-        return this.container.get<IBotService>(contractSymbols.IBotService);
+    public get botService():contracts.IBotService{
+        return this.container.get<contracts.IBotService>(contracts.contractSymbols.IBotService);
+    }   
+
+    private _registerDialogs(){
+        var ds = dialogs;
+
+        for(var i in dialogs){
+
+            var dialog = dialogs[i];
+
+            if(typeof dialog == "function"){
+                this.container.bind<contracts.IDialog>(i)
+                    .to(dialog);
+            }            
+        }
+
+        var d = this.container.get<contracts.IDialog>("someBasicDialog");
+        var r = d.id;
     }
 
-    private _prepConfig(): IConfig{
+    private _setupHostService(){
+
+        if(this._config.serverType == serverTypes.AzureFunctions){
+            throw 'Not implemented';
+        }else{
+             this.container.bind<contracts.IHostService>(contracts.contractSymbols.IHostService)
+                .to(localHostService);
+        }            
+    }
+
+    private _setupSystemServices(){
+        this.container.bind<IConfig>(contracts.contractSymbols.IConfig)
+            .toConstantValue(this._prepConfig());
+
+        this.container.bind<contracts.ILogService>(contracts.contractSymbols.ILogService)
+            .to(logService).inSingletonScope();
+
+        this.container.bind<contracts.IBotService>(contracts.contractSymbols.IBotService)
+             .to(botService).inSingletonScope();        
+    }
+
+     private _prepConfig(): IConfig{
         
         var sh = new serverHelper();
         
@@ -42,29 +81,4 @@ export default class startup {
 
         return this._config;
     }
-
-    private _setupHostService(){
-
-        if(this._config.serverType == serverTypes.AzureFunctions){
-            throw 'Not implemented';
-        }else{
-             this.container.bind<IHostService>(contractSymbols.IHostService)
-                .to(localHostService);
-        }            
-    }
-
-    private _setupSystemServices(){
-        this.container.bind<IConfig>(contractSymbols.IConfig)
-            .toConstantValue(this._prepConfig());
-
-        this.container.bind<ILogService>(contractSymbols.ILogService)
-            .to(logService).inSingletonScope();
-
-        this.container.bind<IBotService>(contractSymbols.IBotService)
-             .to(botService).inSingletonScope();
-        
-    }
-
-
 }
-
