@@ -1,12 +1,12 @@
 import "reflect-metadata";
 import { Container, interfaces } from "inversify"
-import * as contracts from "./contract/contracts";
+import * as contracts from "./system/contract/contracts";
 
-import { logService } from "./services/system/logService";
-import { serverHelper } from "./helpers/serverHelper";
-import { localHostService } from "./services/system/host/localHostService";
-import { IConfig, serverTypes } from "./contract/systemEntities";
-import { botService } from "./services/botService";
+import { logService } from "./system/services/logService";
+import { serverHelper } from "./system/helpers/serverHelper";
+import { localHostService } from "./system/services/host/localHostService";
+import { IConfig, serverTypes } from "./system/contract/systemEntities";
+import { botService } from "./system/services/botService";
 import * as dialogs from "./dialogs/dialogIndex";
 
 export default class startup {
@@ -51,14 +51,11 @@ export default class startup {
             }
         }
 
-        // var all = this.container.getAll<contracts.IDialog>("dialog");
-
-        // var me = all[0].id;
-
+        //you can now pull the dialogs from the container like this...
+        //or use the Factory<IDialog> to inject as demonstrated in the constructor of botService
+        // var all = this.container.getAll<contracts.IDialog>("dialog");        
         // var d = this.container.getNamed<contracts.IDialog>("dialog", "someBasicDialog");
-
-        // var me2 = d.id;
-        // var r = d.id;
+        
     }
 
     private _setupHostService() {

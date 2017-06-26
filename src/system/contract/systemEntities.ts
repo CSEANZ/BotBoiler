@@ -6,7 +6,6 @@ export interface IConfig{
     serverType: serverTypes
 }
 
-
 export enum serverTypes {
     AzureFunctions,
     Local

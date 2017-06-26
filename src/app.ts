@@ -1,7 +1,8 @@
 require('dotenv').config();
 
 import startup from './startup';
-import { IBotService } from "./contract/contracts";
+import { IBotService } from "./system/contract/contracts";
+
 
 class App {
     run() {

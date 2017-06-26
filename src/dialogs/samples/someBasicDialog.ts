@@ -1,7 +1,7 @@
 import * as builder from 'botbuilder';
 import { injectable, inject } from "inversify";
 
-import * as contracts  from '../../contract/contracts';
+import * as contracts  from '../../system/contract/contracts';
 
 @injectable()
 export default class someBasicDialog implements contracts.IDialog{
@@ -14,8 +14,8 @@ export default class someBasicDialog implements contracts.IDialog{
     }
 
     private step1(session, args, next){
-        const botName = 'Jordo';
-        const description = `LKjsdflkdfj`;
+        const botName = 'DemoBot';
+        const description = `Demonstrate good composition and injection!`;
 
         session.send(`Hi there! I'm ${botName}`);
         session.send(`In a nutshell, here's what I can do:\n\n${description}`);
