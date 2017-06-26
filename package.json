@@ -1,0 +1,45 @@
+{
+  "name": "funkynode",
+  "version": "1.0.0",
+  "description": "Sample showing a method of working with TypeScript based Azure Functions",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "typings install",
+    "build": "tsc",
+    "prewatch": "typings install",
+    "watch": "tsc -w --project ./src/tsconfig.json",
+    "outputwatch": "nodemon ./output/run/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakkaj/funkynode.git"
+  },
+  "keywords": [
+    "Azure",
+    "Functions",
+    "Node",
+    "TypeScript"
+  ],
+  "author": "jakkaj",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jakkaj/funkynode/issues"
+  },
+  "homepage": "https://github.com/jakkaj/funkynode#readme",
+  "devDependencies": {
+    "@types/node": "^8.0.1",
+    "@types/restify": "^4.3.4",
+    "ava": "^0.19.1",
+    "gulp": "^3.9.1",
+    "gulp-run": "^1.7.1",
+    "gulp-tsc": "^1.3.2",
+    "typescript": "^2.3.2"
+  },
+  "dependencies": {
+    "botbuilder": "^3.8.4",
+    "dotenv": "^4.0.0",
+    "inversify": "^4.1.1",
+    "reflect-metadata": "^0.1.10",
+    "restify": "^4.3.0"
+  }
+}

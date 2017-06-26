@@ -1,0 +1,46 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "0.1.0",
+	"tasks":[
+		
+		{
+			"taskName": "build:test",
+			"command": "gulp",
+			"isShellCommand": true,			
+			"showOutput": "always",
+			"problemMatcher": ["$gulp-tsc"],
+			"isBuildCommand": false,
+			"args": ["compile:tests"]
+		},		
+		{
+			"taskName": "build:dev:fast",
+			"command": "tsc",
+			"isShellCommand": true,
+			"args": ["-p", "./src", "-w"],
+			"showOutput": "silent",			
+			"problemMatcher": "$tsc",
+			"isBuildCommand": true
+		},
+		{
+			"taskName": "test:ava",
+			"isTestCommand": false,
+			"command": "ava",
+			"isShellCommand": true,
+			"args": ["build/test_output/tests.js"],
+			"showOutput": "always"
+			
+		},
+		{
+			"taskName": "test:gulp",
+			"isTestCommand": true,
+			"command": "gulp",
+			"isShellCommand": true,
+			"args": ["test"],
+			"showOutput": "always"
+			
+		}
+	]
+	
+	
+}
