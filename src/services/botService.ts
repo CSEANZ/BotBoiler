@@ -17,8 +17,8 @@ export class botService extends serviceBase implements contracts.IBotService {
         super();
 
         this._dialogs = dialogs();
-        this._hostService = hostService;
-    }
+        this._hostService = hostService;        
+    }    
 
     public boot() {
 
@@ -33,18 +33,22 @@ export class botService extends serviceBase implements contracts.IBotService {
             session.endDialog(`I'm sorry, I did not understand '${session.message.text}'.\nType 'help' to know more about me :)`);
         });
 
+        this._enableLuis();
+
         for (var i in this._dialogs) {
             var dialog: contracts.IDialog = this._dialogs[i];
             this._bot.dialog(dialog.id, dialog.waterfall).triggerAction({ matches: dialog.trigger });
-        }
+        }        
+    }
 
-        this._bot.dialog('AgentMenu', [
-            (session, args) => {
-                session.conversationData.isAgent = true;
-                session.endDialog(`Welcome back human agent, there are ue.\n\nType _agent help_ for more details.`);
-            }
-        ]).triggerAction({
-            matches: /^\/agent login/i
-        });
+    private _enableLuis(){
+        if(this.config.luisModelUrl && this.config.luisModelUrl.length > 0){
+            var luisRecognizer = new builder.LuisRecognizer(this.config.luisModelUrl)
+                .onEnabled(function (context, callback) {
+                    var enabled = context.dialogStack().length === 0;
+                    callback(null, enabled);
+                });
+            this._bot.recognizer(luisRecognizer);
+        }
     }
 }
