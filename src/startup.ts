@@ -22,7 +22,8 @@ export default class startup {
         this._setupSystemServices();
         this._setupHostService();
         this._registerDialogs();
-        //Your services registered here      
+        //Your services registered here     
+
     }  
 
     public get botService():contracts.IBotService{
@@ -37,12 +38,18 @@ export default class startup {
             var dialog = dialogs[i];
 
             if(typeof dialog == "function"){
-                this.container.bind<contracts.IDialog>(i)
-                    .to(dialog);
+                this.container.bind<contracts.IDialog>("dialog")
+                    .to(dialog).whenTargetTagged("autoinjected", i);
             }            
         }
 
-        var d = this.container.get<contracts.IDialog>("someBasicDialog");
+        var all = this.container.getAll<contracts.IDialog>("dialog");
+
+        var me = all[0].id;
+
+        var d = this.container.getTagged<contracts.IDialog>("dialog", "autoinjected", "someBasicDialog");
+
+        var me2 = d.id;
         var r = d.id;
     }
 
