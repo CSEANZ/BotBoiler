@@ -22,18 +22,20 @@ export default class startup {
         this._setupSystemServices();
         this._setupHostService();
         this._registerDialogs();
-        //Your services registered here     
+        this._registerDialogFactor();
+        //Your services registered here   
+    }
 
+    public get botService(): contracts.IBotService {
+        return this.container.get<contracts.IBotService>(contracts.contractSymbols.IBotService);
+    }
+
+    private _registerDialogFactor(){
         this.container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>").toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
             return () => {
                 return context.container.getAll<contracts.IDialog>("dialog");                
             };
         });
-
-    }
-
-    public get botService(): contracts.IBotService {
-        return this.container.get<contracts.IBotService>(contracts.contractSymbols.IBotService);
     }
 
     private _registerDialogs() {
@@ -49,14 +51,14 @@ export default class startup {
             }
         }
 
-        var all = this.container.getAll<contracts.IDialog>("dialog");
+        // var all = this.container.getAll<contracts.IDialog>("dialog");
 
-        var me = all[0].id;
+        // var me = all[0].id;
 
-        var d = this.container.getNamed<contracts.IDialog>("dialog", "someBasicDialog");
+        // var d = this.container.getNamed<contracts.IDialog>("dialog", "someBasicDialog");
 
-        var me2 = d.id;
-        var r = d.id;
+        // var me2 = d.id;
+        // var r = d.id;
     }
 
     private _setupHostService() {
