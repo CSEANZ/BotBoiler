@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Container } from "inversify"
+import { Container, interfaces } from "inversify"
 import * as contracts from "./contract/contracts";
 
 import { logService } from "./services/system/logService";
@@ -7,7 +7,7 @@ import { serverHelper } from "./helpers/serverHelper";
 import { localHostService } from "./services/system/host/localHostService";
 import { IConfig, serverTypes } from "./contract/systemEntities";
 import { botService } from "./services/botService";
-import * as dialogs  from "./dialogs/dialogIndex";
+import * as dialogs from "./dialogs/dialogIndex";
 
 export default class startup {
 
@@ -24,46 +24,52 @@ export default class startup {
         this._registerDialogs();
         //Your services registered here     
 
-    }  
+        this.container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>").toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
+            return () => {
+                return context.container.getAll<contracts.IDialog>("dialog");                
+            };
+        });
 
-    public get botService():contracts.IBotService{
+    }
+
+    public get botService(): contracts.IBotService {
         return this.container.get<contracts.IBotService>(contracts.contractSymbols.IBotService);
-    }   
+    }
 
-    private _registerDialogs(){
+    private _registerDialogs() {
         var ds = dialogs;
 
-        for(var i in dialogs){
+        for (var i in dialogs) {
 
             var dialog = dialogs[i];
 
-            if(typeof dialog == "function"){
+            if (typeof dialog == "function") {
                 this.container.bind<contracts.IDialog>("dialog")
-                    .to(dialog).whenTargetTagged("autoinjected", i);
-            }            
+                    .to(dialog).whenTargetNamed(i);
+            }
         }
 
         var all = this.container.getAll<contracts.IDialog>("dialog");
 
         var me = all[0].id;
 
-        var d = this.container.getTagged<contracts.IDialog>("dialog", "autoinjected", "someBasicDialog");
+        var d = this.container.getNamed<contracts.IDialog>("dialog", "someBasicDialog");
 
         var me2 = d.id;
         var r = d.id;
     }
 
-    private _setupHostService(){
+    private _setupHostService() {
 
-        if(this._config.serverType == serverTypes.AzureFunctions){
+        if (this._config.serverType == serverTypes.AzureFunctions) {
             throw 'Not implemented';
-        }else{
-             this.container.bind<contracts.IHostService>(contracts.contractSymbols.IHostService)
+        } else {
+            this.container.bind<contracts.IHostService>(contracts.contractSymbols.IHostService)
                 .to(localHostService);
-        }            
+        }
     }
 
-    private _setupSystemServices(){
+    private _setupSystemServices() {
         this.container.bind<IConfig>(contracts.contractSymbols.IConfig)
             .toConstantValue(this._prepConfig());
 
@@ -71,13 +77,13 @@ export default class startup {
             .to(logService).inSingletonScope();
 
         this.container.bind<contracts.IBotService>(contracts.contractSymbols.IBotService)
-             .to(botService).inSingletonScope();        
+            .to(botService).inSingletonScope();
     }
 
-     private _prepConfig(): IConfig{
-        
+    private _prepConfig(): IConfig {
+
         var sh = new serverHelper();
-        
+
         this._config = {
             port: process.env.port || process.env.PORT || 3978,
             microsoftAppId: process.env.MICROSOFT_APP_ID,

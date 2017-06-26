@@ -8,7 +8,7 @@ class someBasicDialog implements contracts.IDialog{
     
     public id:string = 'someBasicDialog';
     public name:string ='someBasicDialog';
-
+    public trigger:RegExp =/^help$/i
     public get waterfall(): builder.IDialogWaterfallStep[]{
         return [this.step1, this.step2];
     }

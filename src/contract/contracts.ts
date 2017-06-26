@@ -14,8 +14,9 @@ interface IBotService{
 }
 
 interface IDialog {
-    id: String;
-    name: String;
+    id: string;
+    name: string;
+    trigger: string | RegExp;
     waterfall: builder.IDialogWaterfallStep[];
 }
 
