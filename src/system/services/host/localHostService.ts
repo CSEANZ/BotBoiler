@@ -1,8 +1,8 @@
 
 import * as restify from 'restify';
 import * as builder from 'botbuilder';
-import { IHostService } from "../../../contract/contracts";
-import { serviceBase } from "../../serviceBase";
+import { IHostService } from "../../contract/contracts";
+import { serviceBase } from "../serviceBase";
 
 export class localHostService extends serviceBase implements IHostService{
 

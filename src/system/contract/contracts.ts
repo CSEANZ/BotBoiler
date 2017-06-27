@@ -5,6 +5,10 @@ interface ILogService{
     setLogCallback(callback:(logMessage:string) => any);
 }
 
+interface INetClient{
+    postJson<TUpload, TResult>(url:string, path:string, postData:TUpload, headers?:any):Promise<TResult>;
+}
+
 interface IHostService{
     init(connector:any);
 }
@@ -24,7 +28,8 @@ let contractSymbols = {
     ILogService: Symbol("ILogService"),    
     IConfig: Symbol("IConfig"),
     IHostService: Symbol("IHostService"),
-    IBotService: Symbol("IBotService")
+    IBotService: Symbol("IBotService"), 
+    INetClient: Symbol("INetClient")
 }
 
-export {contractSymbols, ILogService, IHostService, IBotService, IDialog};
+export {contractSymbols, ILogService, IHostService, IBotService, IDialog, INetClient};

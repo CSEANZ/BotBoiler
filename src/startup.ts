@@ -8,6 +8,7 @@ import { localHostService } from "./system/services/host/localHostService";
 import { IConfig, serverTypes } from "./system/contract/systemEntities";
 import { botService } from "./system/services/botService";
 import * as dialogs from "./dialogs/dialogIndex";
+import { netClient } from "./system/helpers/netClient";
 
 export default class startup {
 
@@ -31,10 +32,11 @@ export default class startup {
     }
 
     private _registerDialogFactor(){
-        this.container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>").toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
-            return () => {
-                return context.container.getAll<contracts.IDialog>("dialog");                
-            };
+        this.container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
+            .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
+                return () => {
+                    return context.container.getAll<contracts.IDialog>("dialog");                
+                };
         });
     }
 
@@ -49,14 +51,14 @@ export default class startup {
                 this.container.bind<contracts.IDialog>("dialog")
                     .to(dialog).whenTargetNamed(i);
             }
-        }
-
-        //you can now pull the dialogs from the container like this...
-        //or use the Factory<IDialog> to inject as demonstrated in the constructor of botService
-        // var all = this.container.getAll<contracts.IDialog>("dialog");        
-        // var d = this.container.getNamed<contracts.IDialog>("dialog", "someBasicDialog");
-        
+        }      
     }
+
+    //you can now pull the dialogs from the container like this...
+    //or use the Factory<IDialog> to inject as demonstrated in the constructor of botService
+    // var all = this.container.getAll<contracts.IDialog>("dialog");        
+    // var d = this.container.getNamed<contracts.IDialog>("dialog", "someBasicDialog");
+        
 
     private _setupHostService() {
 
@@ -77,6 +79,9 @@ export default class startup {
 
         this.container.bind<contracts.IBotService>(contracts.contractSymbols.IBotService)
             .to(botService).inSingletonScope();
+
+        this.container.bind<contracts.INetClient>(contracts.contractSymbols.INetClient)
+            .to(netClient).inSingletonScope();
     }
 
     private _prepConfig(): IConfig {
@@ -88,7 +93,9 @@ export default class startup {
             microsoftAppId: process.env.MICROSOFT_APP_ID,
             microsoftAppPassword: process.env.MICROSOFT_APP_PASSWORD,
             luisModelUrl: process.env.LUIS_MODEL_URL,
-            serverType: sh.getServerType()
+            serverType: sh.getServerType(),
+            KBID: process.env.KBID,
+            subscription: process.env.SUBSCRIPTION_KEY
         }
 
         return this._config;
