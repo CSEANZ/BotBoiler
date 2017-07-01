@@ -23,7 +23,7 @@ export default class startup {
         this._setupSystemServices();
         this._setupHostService();
         this._registerDialogs();
-        this._registerDialogFactor();
+        this._registerDialogFactory();
         //Your services registered here   
     }
 
@@ -31,13 +31,13 @@ export default class startup {
         return this.container.get<contracts.IBotService>(contracts.contractSymbols.IBotService);
     }
 
-    private _registerDialogFactor(){
+    private _registerDialogFactory(){
         this.container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
             .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
                 return () => {
                     return context.container.getAll<contracts.IDialog>("dialog");                
                 };
-        });
+        });        
     }
 
     private _registerDialogs() {
