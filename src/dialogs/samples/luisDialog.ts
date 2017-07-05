@@ -20,7 +20,7 @@ export default class luisDialog extends serviceBase implements contracts.IDialog
         var sArgs = JSON.stringify(args);
         this.logger.log(sArgs);
         
-        const entity = builder.EntityRecognizer.findEntity(args.entities, 'entity');
+        const entity = builder.EntityRecognizer.findEntity(args.intent.entities, 'category');
         if(entity) next({ response: entity.entity });
         else builder.Prompts.text(session, 'Please provide entityName');
     }

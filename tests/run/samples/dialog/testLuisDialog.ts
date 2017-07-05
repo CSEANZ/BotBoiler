@@ -18,7 +18,7 @@ class testLuisDialog extends testBase {
 
     }
 
-    testStep1(t: TestContext) {
+    testStep1_needsEntity(t: TestContext) {
         t.not(undefined, this._luisDialog);
         t.is(this._luisDialog.name, 'luisDialog');
 
@@ -38,17 +38,41 @@ class testLuisDialog extends testBase {
         var next = sinon.spy();
         var textSpy = sinon.spy(builder.Prompts, 'text');
         //var sessionStub = sinon.createStubInstance(MyConstructor) ;
-        var session:builder.Session = sinon.createStubInstance(builder.Session) ;
+        var session: builder.Session = sinon.createStubInstance(builder.Session);
 
         func(session, args, next);
         textSpy.restore();
-        
+
 
         t.true(textSpy.calledWith(session, 'Please provide entityName'));
+    }
+
+    testStep1_hasEntity(t: TestContext) {
+
+        t.not(undefined, this._luisDialog);
+        t.is(this._luisDialog.name, 'luisDialog');
+
+        var func = this._luisDialog.waterfall[0];
+
+        var args = { "action": "*:luisDialog", "intent": { "score": 0.901591837, "intent": "SubmitTicket", "intents": [{ "intent": "SubmitTicket", "score": 0.901591837 }, { "intent": "HandOffToHuman", "score": 0.127539277 }, { "intent": "ExploreKnowledgeBase", "score": 0.0437066928 }, { "intent": "None", "score": 0.02504362 }, { "intent": "Help", "score": 0.01835419 }], "entities": [{ "entity": "networking", "type": "category", "startIndex": 24, "endIndex": 33, "resolution": { "values": ["networking"] } }] }, "libraryName": "*" }
+
+        var next = sinon.spy();
+        var textSpy = sinon.spy(builder.Prompts, 'text');
+        //var sessionStub = sinon.createStubInstance(MyConstructor) ;
+        var session: builder.Session = sinon.createStubInstance(builder.Session);
+
+        func(session, args, next);
+        textSpy.restore();
+
+        t.true(next.calledOnce);
+        t.is(textSpy.callCount, 0);
+
+       
     }
 }
 
 var testClass = new testLuisDialog();
 
-test(testClass.testStep1.bind(testClass));
+test(testClass.testStep1_hasEntity.bind(testClass));
+test(testClass.testStep1_needsEntity.bind(testClass));
 
