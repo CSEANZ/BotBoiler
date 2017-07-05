@@ -17,8 +17,8 @@ export default class luisDialog extends serviceBase implements contracts.IDialog
     step1(session: builder.Session, args:any, next:Function)  {
         
         //var sSession = JSON.stringify(session);
-        var sArgs = JSON.stringify(args);
-        this.logger.log(sArgs);
+        // var sArgs = JSON.stringify(args);
+        // this.logger.log(sArgs);
         
         const entity = builder.EntityRecognizer.findEntity(args.intent.entities, 'category');
         if(entity) next({ response: entity.entity });

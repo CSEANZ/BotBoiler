@@ -46,7 +46,7 @@ class testLuisDialog extends testBase {
         func(session, args, next);
         textSpy.restore();
 
-
+        t.is(0, next.callCount)
         t.true(textSpy.calledWith(session, 'Please provide entityName'));
     }
 
