@@ -18,6 +18,9 @@ class testLuisDialog extends testBase {
 
     }
 
+    //the user has entered a query that results in the luisDialog needing
+    //to prompt the user for more information. 
+
     testStep1_needsEntity(t: TestContext) {
         t.not(undefined, this._luisDialog);
         t.is(this._luisDialog.name, 'luisDialog');
@@ -46,6 +49,10 @@ class testLuisDialog extends testBase {
 
         t.true(textSpy.calledWith(session, 'Please provide entityName'));
     }
+
+    //the user has entered a query resulting in the dialog not needing to 
+    //collect any more information and will call next method straight away wihtout
+    //asking for a dialog prompt
 
     testStep1_hasEntity(t: TestContext) {
 
