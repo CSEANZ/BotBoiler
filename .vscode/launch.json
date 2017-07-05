@@ -25,12 +25,12 @@
             "name": "Launch Test",
             "program": "${workspaceRoot}/node_modules/ava/profile.js",
             "args": [
-                "${workspaceRoot}/output/test/runTests/fileTests.js"
+                "${workspaceRoot}/output/test/tests/run/samples/dialog/testLuisDialog.js"
             ],
             "cwd": "${workspaceRoot}",
-            "preLaunchTask": "build:test",
+            "preLaunchTask": "build:test:fast",
             "outFiles": [
-                "${workspaceRoot}/output/test/**/*.js"
+                "${workspaceRoot}/output/test/tests/**/*.js"
             ],
             "env":{
                 "TestDebug":"true"

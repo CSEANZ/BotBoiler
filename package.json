@@ -8,7 +8,10 @@
     "build": "tsc",
     "prewatch": "typings install",
     "watch": "tsc -w --project ./src/tsconfig.json",
-    "outputwatch": "nodemon ./output/run/app.js"
+    "outputwatch": "nodemon ./output/run/app.js",
+    "test": "tsc --project ./tests/tsconfig.json && ava ./output/test/tests/run/**/*.js",
+    "testwatchbuild": "tsc -w --project ./tests/tsconfig.json",
+    "testwatchava": "ava -w ./output/test/tests/run/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -29,10 +32,12 @@
   "devDependencies": {
     "@types/node": "^8.0.1",
     "@types/restify": "^4.3.4",
+    "@types/sinon": "^2.3.2",
     "ava": "^0.19.1",
     "gulp": "^3.9.1",
     "gulp-run": "^1.7.1",
     "gulp-tsc": "^1.3.2",
+    "sinon": "^2.3.6",
     "typescript": "^2.3.2"
   },
   "dependencies": {
