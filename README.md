@@ -105,7 +105,7 @@ You'll need two terminals for this. In the first one, type ```npm run testwatchb
 
 The next thing is to start ```ava``` in watch mode. Type ```npm run testwatchava```. Ava will now wait for changes on the transpiled files and will automatically run your tests. 
 
-<img width="640" src="https://user-images.githubusercontent.com/5225782/27892089-00f38b1c-6241-11e7-8b6f-fa5b034fdeb7.gif"/>
+<img width="320" src="https://user-images.githubusercontent.com/5225782/27892089-00f38b1c-6241-11e7-8b6f-fa5b034fdeb7.gif"/>
 
 ### Debug Test
 
