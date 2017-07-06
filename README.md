@@ -5,11 +5,53 @@ BotBoiler is base code to get you started with an enterprise scale Node+Typescri
 
 It's core tenets are that it must be composable, testable, extensible, adhere to separation of concerns and above all be simple, elegant and maintainable.
 
+Create injectable [components](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/model/components/samples/qnaComponent.ts) that can be used by [composable dialogs](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/dialogs/samples/qnaDialog.ts). 
+
+```typescript
+@injectable()
+export default class qnaComponent extends serviceBase implements modelContracts.IQnaComponent {    
+    private _netClient:contracts.INetClient
+    constructor(@inject(contracts.contractSymbols.INetClient) netClient:contracts.INetClient) {
+        super();
+        this._netClient = netClient;
+    }
+    async getAnswer(question: string): Promise<modelContracts.IQnAAnswer> {        
+       ...
+        try{
+            var result = await this._netClient.postJson<any, modelContracts.IQnAAnswer>(url, path, bodyText,  
+                {'Ocp-Apim-Subscription-Key':this.config.qna_subs}); 
+```
+
 Create dialogs, use LUIS or QnA maker, call databases and other services, add authentication and a range of other bot functionality in a nice loosely coupled composable way. 
 
 Inject functionality in to your dialogs as required to reduce complexity and increase testability. 
 
+```typescript
+@injectable()
+export default class qnaDialog extends serviceBase implements contracts.IDialog{
+    private _qnaMaker: modelContracts.IQnaComponent; 
+
+    constructor(@inject(modelContracts.modelSymbols.IQnaComponent)qnaMaker: modelContracts.IQnaComponent) {
+        super();        
+        this._qnaMaker = qnaMaker;        
+    }
+    ...
+    var result = await this._qnaMaker.getAnswer(question);
+```
+
 Unit test using the [Ava](https://github.com/avajs/ava) framework and stub and spy the Bot Framework with [Sinon](http://sinonjs.org/). 
+
+```typescript
+testStep1_hasEntity(t: TestContext) {
+    ...
+    var next = sinon.spy();
+    var textSpy = sinon.spy(builder.Prompts, 'text');
+    var session: builder.Session = sinon.createStubInstance(builder.Session);
+    func(session, args, next);
+    textSpy.restore();
+    t.true(next.calledOnce);
+    t.is(textSpy.callCount, 0);
+```
 
 **Note:** This is a work in progress, so much more to come. Please create issues / PRs if you find problems or can think of improvements. 
 
