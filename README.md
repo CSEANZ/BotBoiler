@@ -59,7 +59,7 @@ This mode is simple to start (instructions are for [Visual Studio Code](https://
 
 By using ```tsc``` in watch mode your Typescript code will be transpiled to the output/run directory. This will then cause ```nodemon``` to restart your server with the latest changes every time you save. Nice!  You'll see outputs to this effect in your terminal window. 
 
-<img src="https://user-images.githubusercontent.com/5225782/27891601-0cfaae16-623e-11e7-94c8-cf656789258e.gif" width="720" alt="nodemon"/>
+<img src="https://user-images.githubusercontent.com/5225782/27891601-0cfaae16-623e-11e7-94c8-cf656789258e.gif" width="640" alt="nodemon"/>
 
 **Note on working with many terminal windows in VS Code** When working with multiple terminals, it can become cumbersome to need to switch between them with the mouse all the time. Luckily you can add a keyboard short cuts. Press ```ctrl-shift-p```, type ```keyboard``` and select ```Preferences: Open Keyboard Shortcuts File```. Add the following shortcuts:
 
@@ -105,7 +105,7 @@ You'll need two terminals for this. In the first one, type ```npm run testwatchb
 
 The next thing is to start ```ava``` in watch mode. Type ```npm run testwatchava```. Ava will now wait for changes on the transpiled files and will automatically run your tests. 
 
-![bot_avaautorun](https://user-images.githubusercontent.com/5225782/27892089-00f38b1c-6241-11e7-8b6f-fa5b034fdeb7.gif)
+<img width="640" src="https://user-images.githubusercontent.com/5225782/27892089-00f38b1c-6241-11e7-8b6f-fa5b034fdeb7.gif"/>
 
 ### Debug Test
 
