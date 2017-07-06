@@ -19,8 +19,7 @@
 			"command": "tsc",
 			"isShellCommand": true,
 			"args": ["-p", "./tests"],
-			"showOutput": "always"
-			
+			"showOutput": "always"			
 		},
 		{
 			"taskName": "test:ava",
