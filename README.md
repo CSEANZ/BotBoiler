@@ -17,9 +17,10 @@ Thanks to [@geektrainer](https://github.com/GeekTrainer?tab=repositories) and ot
 
 ## What's here
 
-Read this readme first to get started, and fire up the code. Then proceed through these next steps:
+Read this readme first to get started and fire up the code. Then proceed through these next steps:
 
 - [Create a Dialog](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/createDialog.md)
+- [Create an Injectable Component](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/createInjectableComponent.md)
 
 
 ## Prerequisites
