@@ -221,6 +221,8 @@ Now you're ready to [create your first dialog](https://github.com/MSFTAuDX/BotBo
 - [Getting started with the Bot Framework Emulator](https://docs.microsoft.com/en-us/bot-framework/debug-bots-emulator)
     - [Bot Framework Emulator Downloads](https://github.com/Microsoft/BotFramework-Emulator/releases)
 - [Visual Studio Code](https://code.visualstudio.com/)
-- [Visual Studio code and Typescript](https://code.visualstudio.com/docs/languages/typescript)
-- [Ava Javascript Unit Testing Framework](https://github.com/avajs/ava)
+- [Visual Studio Code and Typescript](https://code.visualstudio.com/docs/languages/typescript)
+- [Ava](https://github.com/avajs/ava) JavaScript Unit Testing Framework
+- [Sinon](http://sinonjs.org/) for JavaScript Stubs and Spies
+- [Inversify](http://inversify.io/) IOC Container
 - [Microsoft QnA Maker](https://docs.microsoft.com/en-au/azure/cognitive-services/qnamaker/home)
