@@ -4,8 +4,8 @@ export interface IConfig{
     microsoftAppPassword?: string,
     luisModelUrl?: string,
     serverType?: serverTypes, 
-    KBID?:string,
-    subscription?:string
+    qna_id?:string,
+    qna_subs?:string
 }
 
 export enum serverTypes {

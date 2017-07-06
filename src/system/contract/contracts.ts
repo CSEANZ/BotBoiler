@@ -17,6 +17,8 @@ interface IBotService{
     boot();
 }
 
+//this is adapted from generator-botbuilder here: https://github.com/MicrosoftDX/generator-botbuilder/blob/master/generators/app/templates/dialogs-ts/idialog.ts
+
 interface IDialog {
     id: string;
     name: string;
