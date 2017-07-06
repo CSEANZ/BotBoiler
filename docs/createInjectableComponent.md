@@ -215,4 +215,4 @@ Now you can type "ask" to your bot, then type a question from your QnA!
 Full listings of these classes can be found here: [qnaDialog](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/dialogs/samples/qnaDialog.ts) and [qnaComponent](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/model/comonents/samples/qnaComponent.ts)
 
 
-Next - [Testable Dialogs]([Create an Injectable Component](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/testableDialogs.md))
+Next >> [Testable Dialogs](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/testableDialogs.md)

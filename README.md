@@ -63,7 +63,7 @@ Read this readme first to get started and fire up the code. Then proceed through
 
 - [Create a Dialog](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/createDialog.md)
 - [Create an Injectable Component](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/createInjectableComponent.md)
-- [Unit Testing Dialogs with spies and stubs](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/testableDialogs.md)
+- [Unit Testing Dialogs with Spies and Stubs](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/testableDialogs.md)
 
 
 ## Prerequisites

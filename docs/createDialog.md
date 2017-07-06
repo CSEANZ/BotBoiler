@@ -80,4 +80,4 @@ That's it! The system will now automatically add this dialog and you can now typ
 
 This is a super simple example. Let's get more complex. 
 
-[Create an Injectable Component](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/createInjectableComponent.md)
+Next >> [Create an Injectable Component](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/createInjectableComponent.md)
