@@ -10,6 +10,9 @@ import { botService } from "./system/services/botService";
 import * as dialogs from "./dialogs/dialogIndex";
 import { netClient } from "./system/helpers/netClient";
 
+import * as modelContracts from './model/modelContracts';
+import qnaComponent from './model/components/samples/qnaComponent';
+
 export default class startup {
 
     public container: Container;
@@ -21,10 +24,16 @@ export default class startup {
         this.container = new Container();
 
         this._setupSystemServices();
-        this._setupHostService();
-        this._registerDialogs();
-        this._registerDialogFactory();
-        //Your services registered here   
+        this._setupHostService();      
+        this._registerDialogFactory();        
+        this._registerCustomComponents();
+        this._registerDialogs();  
+    }
+    
+    private _registerCustomComponents(){
+         //Your services registered here   
+        this.container.bind<modelContracts.IQnaComponent>(modelContracts.modelSymbols.IQnaComponent)
+                .to(qnaComponent);   
     }
 
     public get botService(): contracts.IBotService {
@@ -94,8 +103,8 @@ export default class startup {
             microsoftAppPassword: process.env.MICROSOFT_APP_PASSWORD,
             luisModelUrl: process.env.LUIS_MODEL_URL,
             serverType: sh.getServerType(),
-            KBID: process.env.KBID,
-            subscription: process.env.SUBSCRIPTION_KEY
+            qna_id: process.env.QNA_ID,
+            qna_subs: process.env.QNA_SUBS_KEY
         }
 
         return this._config;
