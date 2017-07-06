@@ -42,11 +42,8 @@ class testLuisDialog extends testBase {
         var textSpy = sinon.spy(builder.Prompts, 'text');
         //var sessionStub = sinon.createStubInstance(MyConstructor) ;
         var session: builder.Session = sinon.createStubInstance(builder.Session);
-
         func(session, args, next);
         textSpy.restore();
-
-
         t.true(textSpy.calledWith(session, 'Please provide entityName'));
     }
 

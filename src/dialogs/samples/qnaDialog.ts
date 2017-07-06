@@ -15,8 +15,7 @@ export default class qnaDialog extends serviceBase implements contracts.IDialog{
     private _qnaMaker: modelContracts.IQnaComponent; 
 
     constructor(@inject(modelContracts.modelSymbols.IQnaComponent)qnaMaker: modelContracts.IQnaComponent) {
-        super();
-        
+        super();        
         this._qnaMaker = qnaMaker;        
     }
 

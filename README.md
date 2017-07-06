@@ -63,6 +63,7 @@ Read this readme first to get started and fire up the code. Then proceed through
 
 - [Create a Dialog](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/createDialog.md)
 - [Create an Injectable Component](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/createInjectableComponent.md)
+- [Unit Testing Dialogs with spies and stubs]([Create an Injectable Component](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/testableDialogs.md)
 
 
 ## Prerequisites
@@ -83,6 +84,8 @@ Before you begin, it's recommended that you're across the following:
 *Note* We are working on a [generator](https://github.com/MSFTAuDX/generator-botboiler) to help get started quickly which will be available soon. 
 
 Clone [this](https://github.com/MSFTAuDX/BotBoiler) GitHub repo and launch VS Code from the base directory of the project. 
+
+Don't forget to run ```npm install```!
 
 ### Environment Settings
 
