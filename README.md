@@ -5,12 +5,15 @@ BotBoiler is base code to get you started with an enterprise scale Node+Typescri
 
 It's tenets are that it must be composable, testable, extensible, adhere to separation of concerns and above all be simple, elegant and maintainable.
 
+**Note:** This is a work in progress, so much more to come. Please create issues / PRs if you find problems or can think of improvements. 
+
 ## Prerequisites
 
 Before you begin, it's recommended that you're across the following:
 
 - [Bot Builder and the Bot Framework](https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-quickstart)
 - Read up on using Typescript in Visual Studio Code: [Visual Studio code and Typescript](https://code.visualstudio.com/docs/languages/typescript)
+- [the Ava Javascript Unit Testing Framework](https://github.com/avajs/ava)
 
 
 
@@ -81,12 +84,36 @@ Just press ```F5``` and the app should build, and a debugger will attach ready f
 
 *You're working on unit/integration tests. You want them to just run as you work.*
 
+**Note** See the section on unit testing for more info here, this is just the getting started bit.
 
+This is the fun part. It's a bit like the "Normal Dev Iteration" above where it runs ```tsc``` in watch mode, but this time instead of ```nodemon``` firing up a server, we use ```ava``` in watch mode to automatically run your tests - when ever you save. 
+
+Make sure the build isn't running (yep - spinny thing no no). 
+
+You'll need two terminals for this. In the first one, type ```npm run testwatchbuild```. This will kick off ```tsc``` in watch mode for the tests sub folder which outputs to output/test/tests. It will also publish the other src folder under output/test because it is a dependency.
+
+The next thing is to start ```ava``` in watch mode. Type ```npm run testwatchava```. Ava will now wait for changes on the transpiled files and will automatically run your tests. 
+
+![bot_avaautorun](https://user-images.githubusercontent.com/5225782/27892089-00f38b1c-6241-11e7-8b6f-fa5b034fdeb7.gif)
 
 ### Debug Test
 
+*Unit/integration tests are not behaving. You need some help debugging them*
 
+You can connect a debugger for your tests. The way ava works, you cannot simply set your startup file as usual and attach the code debugger. We have however set up a launch task that does the special ava way. 
 
+First, you need to select which test file to attach to. Open ```launch.json``` and find the task named "Launch Test". Edit the args to point to the **transpiled** file location. Don't worry, you can still set breakpoints in your original TS files - VS Code handles all that for you again thanks to [source maps](https://code.visualstudio.com/docs/languages/typescript#_javascript-source-map-support). 
+
+```json
+"args": [
+    "${workspaceRoot}/output/test/tests/run/samples/dialog/testLuisDialog.js"
+],
+```
+
+From the debug menu ![bot_debugbutton](https://user-images.githubusercontent.com/5225782/27892175-6e35a9a8-6241-11e7-82e1-050fc99f7bf8.PNG)
+ in VS Code select "Launch Test" from the drop down and press ```F5```. 
+
+ **Note** Sometimes the break points can get a bit out of wack - especially with async code. If this is the case, then use ```debugger;``` in your code to do it manually - that seems to work better!
 
 ## Links
 
@@ -96,3 +123,4 @@ Just press ```F5``` and the app should build, and a debugger will attach ready f
     - [Bot Framework Emulator Downloads](https://github.com/Microsoft/BotFramework-Emulator/releases)
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [Visual Studio code and Typescript](https://code.visualstudio.com/docs/languages/typescript)
+- [Ava Javascript Unit Testing Framework](https://github.com/avajs/ava)
