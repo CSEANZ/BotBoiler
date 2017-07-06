@@ -1,9 +1,15 @@
 # BotBoiler
-Boilerplate code for Typescript based bots.
+*Boilerplate code for Typescript based bots*
 
 BotBoiler is base code to get you started with an enterprise scale Node+Typescript based bot. 
 
-It's tenets are that it must be composable, testable, extensible, adhere to separation of concerns and above all be simple, elegant and maintainable.
+It's core tenets are that it must be composable, testable, extensible, adhere to separation of concerns and above all be simple, elegant and maintainable.
+
+Create dialogs, use LUIS or QnA maker, call databases and other services, add authentication and a range of other bot functionality in a nice loosely coupled composable way. 
+
+Inject functionality in to your dialogs as required to reduce complexity and increase testability. 
+
+Unit test using the [Ava](https://github.com/avajs/ava) framework and stub and spy the Bot Framework with [Sinon](http://sinonjs.org/). 
 
 **Note:** This is a work in progress, so much more to come. Please create issues / PRs if you find problems or can think of improvements. 
 
@@ -14,6 +20,8 @@ Before you begin, it's recommended that you're across the following:
 - [Bot Builder and the Bot Framework](https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-quickstart)
 - Read up on using Typescript in Visual Studio Code: [Visual Studio code and Typescript](https://code.visualstudio.com/docs/languages/typescript)
 - [the Ava Javascript Unit Testing Framework](https://github.com/avajs/ava)
+- Learn about stubs and spies using [Sinon](http://sinonjs.org/)
+- Dependency Injection with [Inversify](http://inversify.io/)
 
 
 
@@ -114,6 +122,13 @@ From the debug menu ![bot_debugbutton](https://user-images.githubusercontent.com
  in VS Code select "Launch Test" from the drop down and press ```F5```. 
 
  **Note** Sometimes the break points can get a bit out of wack - especially with async code. If this is the case, then use ```debugger;``` in your code to do it manually - that seems to work better!
+
+
+## Create a dialog
+
+Dialogs are the center of bots. Adding them is super simple in this framework. Dialogs are exposed via the ```dialogIndex``` module. Any dialog that is exposed here will be automatically added to the IOC Container ([Inversify](http://inversify.io/)) and added to the bot dialog. Any dialog exposed in this way can ask for any other component or service that has been registered to be injected at runtime. 
+
+
 
 ## Links
 
