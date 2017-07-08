@@ -9,7 +9,7 @@ Dialogs are the center of bots. Adding them is super simple in this framework. D
 
 Let's create a super simple two step dialog. 
 
-Dialogs are javascript classes in this framework. They implement the ```IDialog``` interface. This interfaces says we need to expose each step as an array via the ```waterfall()``` getter. 
+Dialogs are javascript [classes](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) in this framework. They implement the ```IDialog``` interface. This interfaces says we need to expose each step as an array via the ```waterfall()``` getter. 
 
 At the end of the day Dialogs are still based on the [waterfall](https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-dialog-manage-conversation-flow) approach if you'd like to do further reading on that.  
 
