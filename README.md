@@ -1,7 +1,7 @@
 # BotBoiler
-*Boilerplate code for Typescript based bots*
+*Boilerplate code for Typescript based bots built with the Microsoft Botbuilder framework*
 
-BotBoiler is base code to get you started with an enterprise scale Node+Typescript based bot. Works with ```restify``` (for local development), Azure Functions and soon AWS Lambda.
+BotBoiler is base code to get you started with an enterprise scale Node+Typescript based bot that uses the Microsoft Bot Framework and the Botbuilder package. Works with ```restify``` (for local development), Azure Functions and soon AWS Lambda.
 
 It's core tenets are that it must be composable, testable, extensible, adhere to separation of concerns and above all be simple, elegant and maintainable.
 
@@ -23,6 +23,10 @@ export default class qnaDialog extends serviceBase implements contracts.IDialog{
     ...
     var result = await this._qnaMaker.getAnswer(question);
 ```
+
+Once dialogs are registered on the IOC container, they will be automatially added to the bot. Add them to the IOC container by exposing them via [a module](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/dialogs/dialogIndex.ts).
+
+
 
 Unit test using the [Ava](https://github.com/avajs/ava) framework and stub and spy the Bot Framework with [Sinon](http://sinonjs.org/). 
 
