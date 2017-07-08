@@ -1,26 +1,11 @@
 # BotBoiler
 *Boilerplate code for Typescript based bots*
 
-BotBoiler is base code to get you started with an enterprise scale Node+Typescript based bot. 
+BotBoiler is base code to get you started with an enterprise scale Node+Typescript based bot. Works with ```restify``` (for local development), Azure Functions and soon AWS Lambda.
 
 It's core tenets are that it must be composable, testable, extensible, adhere to separation of concerns and above all be simple, elegant and maintainable.
 
 Create injectable [components](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/model/components/samples/qnaComponent.ts) that can be used by [composable dialogs](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/dialogs/samples/qnaDialog.ts). 
-
-```typescript
-@injectable()
-export default class qnaComponent extends serviceBase implements modelContracts.IQnaComponent {    
-    private _netClient:contracts.INetClient
-    constructor(@inject(contracts.contractSymbols.INetClient) netClient:contracts.INetClient) {
-        super();
-        this._netClient = netClient;
-    }
-    async getAnswer(question: string): Promise<modelContracts.IQnAAnswer> {        
-       ...
-        try{
-            var result = await this._netClient.postJson<any, modelContracts.IQnAAnswer>(url, path, bodyText,  
-                {'Ocp-Apim-Subscription-Key':this.config.qna_subs}); 
-```
 
 Create dialogs, use LUIS or QnA maker, call databases and other services, add authentication and a range of other bot functionality in a nice loosely coupled composable way. 
 
@@ -116,6 +101,24 @@ During development, you can place your settings in the ```.env``` file located i
 You'll need to set up a new bot on the [Microsoft Bot Framework developer](https://dev.botframework.com/) site. You can get started with some basic code, but before long you'll need to register for a bot and get your AppId and Password.  Creating this is outside the scope of this document. 
 
 Once created, pop your AppId and Password in both the ```.env``` file and use them to connect in the emulator. 
+
+### Deployment
+
+This framework will detect whether it's running on your local machine, in Azure Functions or AWS Lambda. 
+
+The system will adjust the host service that gets registered with ```Inversify``` to the current platform. The code that does that is [here](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/startup.ts#L76). 
+
+For local development, see the steps listed in the next section of this document. 
+
+#### Azure Functions / Azure App Service
+
+This framework will automatically detect and adjust to run inside Azure Functions. If the host service that it gets back does not return a null value for the ```export``` function it will export that function so Azure Functions can fire requests in. You can see the code that does this is [here](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/app.ts#L23). 
+
+To deploy you can use [Git Deployment](https://github.com/GeekTrainer/help-desk-bot-lab/blob/master/Node/exercise5-Deployment.md), or you can use [k-scratch](https://github.com/jakkaj/k-scratch-node) to update your remote Function code immediately as you edit the system (run ```ks -m -l``` from ./output/run once you have downloaded your publish profile).
+
+#### AWS Lambda
+
+*Coming soon :)*
 
 ### Debugging your bot using the Bot Framework Emulator
 
