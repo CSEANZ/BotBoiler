@@ -60,3 +60,4 @@ typings/
 output_test
 output/
 package-lock.json
+*.PublishSettings

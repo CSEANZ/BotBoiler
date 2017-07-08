@@ -1,10 +1,14 @@
+
 import "reflect-metadata";
 import { Container, interfaces } from "inversify"
 import * as contracts from "./system/contract/contracts";
 
 import { logService } from "./system/services/logService";
 import { serverHelper } from "./system/helpers/serverHelper";
+
 import { localHostService } from "./system/services/host/localHostService";
+import { azureFunctionsHostService } from './system/services/host/azureFunctionsHost';
+
 import { IConfig, serverTypes } from "./system/contract/systemEntities";
 import { botService } from "./system/services/botService";
 import * as dialogs from "./dialogs/dialogIndex";
@@ -15,13 +19,13 @@ import qnaComponent from './model/components/samples/qnaComponent';
 
 export default class startup {
 
-    public container: Container;
+    public _container: Container;
     private _config: IConfig;
 
     private _botService: contracts.IBotService;
 
     constructor() {
-        this.container = new Container();
+        this._container = new Container();
 
         this._setupSystemServices();
         this._setupHostService();      
@@ -32,16 +36,16 @@ export default class startup {
     
     private _registerCustomComponents(){
          //Your services registered here   
-        this.container.bind<modelContracts.IQnaComponent>(modelContracts.modelSymbols.IQnaComponent)
+        this._container.bind<modelContracts.IQnaComponent>(modelContracts.modelSymbols.IQnaComponent)
                 .to(qnaComponent);   
     }
 
     public get botService(): contracts.IBotService {
-        return this.container.get<contracts.IBotService>(contracts.contractSymbols.IBotService);
+        return this._container.get<contracts.IBotService>(contracts.contractSymbols.IBotService);
     }
 
     private _registerDialogFactory(){
-        this.container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
+        this._container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
             .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
                 return () => {
                     return context.container.getAll<contracts.IDialog>("dialog");                
@@ -57,7 +61,7 @@ export default class startup {
             var dialog = dialogs[i];
 
             if (typeof dialog == "function") {
-                this.container.bind<contracts.IDialog>("dialog")
+                this._container.bind<contracts.IDialog>("dialog")
                     .to(dialog).whenTargetNamed(i);
             }
         }      
@@ -72,24 +76,28 @@ export default class startup {
     private _setupHostService() {
 
         if (this._config.serverType == serverTypes.AzureFunctions) {
-            throw 'Not implemented';
+            this._container.bind<contracts.IHostService>(contracts.contractSymbols.IHostService)
+                .to(azureFunctionsHostService).inSingletonScope();
+        }
+        else if(this._config.serverType == serverTypes.AWSLambda){
+            throw ("AWS NOT DONE YET :)");   
         } else {
-            this.container.bind<contracts.IHostService>(contracts.contractSymbols.IHostService)
-                .to(localHostService);
+            this._container.bind<contracts.IHostService>(contracts.contractSymbols.IHostService)
+                .to(localHostService).inSingletonScope();
         }
     }
 
     private _setupSystemServices() {
-        this.container.bind<IConfig>(contracts.contractSymbols.IConfig)
+        this._container.bind<IConfig>(contracts.contractSymbols.IConfig)
             .toConstantValue(this._prepConfig());
 
-        this.container.bind<contracts.ILogService>(contracts.contractSymbols.ILogService)
+        this._container.bind<contracts.ILogService>(contracts.contractSymbols.ILogService)
             .to(logService).inSingletonScope();
 
-        this.container.bind<contracts.IBotService>(contracts.contractSymbols.IBotService)
+        this._container.bind<contracts.IBotService>(contracts.contractSymbols.IBotService)
             .to(botService).inSingletonScope();
 
-        this.container.bind<contracts.INetClient>(contracts.contractSymbols.INetClient)
+        this._container.bind<contracts.INetClient>(contracts.contractSymbols.INetClient)
             .to(netClient).inSingletonScope();
     }
 
@@ -107,6 +115,14 @@ export default class startup {
             qna_subs: process.env.QNA_SUBS_KEY
         }
 
+        return this._config;
+    }
+
+    public get container():Container{
+        return this._container;
+    }
+
+    public get config():IConfig{
         return this._config;
     }
 }

@@ -44,11 +44,7 @@ class testLuisDialog extends testBase {
         var session: builder.Session = sinon.createStubInstance(builder.Session);
         func(session, args, next);
         textSpy.restore();
-<<<<<<< HEAD
-
         t.is(0, next.callCount)
-=======
->>>>>>> e44b2f4c9748f0db165f2837a841a84062600cf3
         t.true(textSpy.calledWith(session, 'Please provide entityName'));
     }
 

@@ -11,6 +11,8 @@ interface INetClient{
 
 interface IHostService{
     init(connector:any);
+    export:any;
+    log(message:string);
 }
 
 interface IBotService{

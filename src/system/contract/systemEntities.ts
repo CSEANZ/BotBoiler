@@ -10,5 +10,6 @@ export interface IConfig{
 
 export enum serverTypes {
     AzureFunctions,
+    AWSLambda,
     Local
 } 
