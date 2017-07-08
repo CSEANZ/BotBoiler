@@ -114,7 +114,13 @@ For local development, see the steps listed in the next section of this document
 
 This framework will automatically detect and adjust to run inside Azure Functions. If the host service that it gets back does not return a null value for the ```export``` function it will export that function so Azure Functions can fire requests in. You can see the code that does this is [here](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/app.ts#L23). 
 
+- [Local Host Service](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/system/services/host/localHostService.ts)
+- [Azure Functions Host Service](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/system/services/host/azureFunctionsHost.ts)
+- AWS Lamda Host Service
+
 To deploy you can use [Git Deployment](https://github.com/GeekTrainer/help-desk-bot-lab/blob/master/Node/exercise5-Deployment.md), or you can use [k-scratch](https://github.com/jakkaj/k-scratch-node) to update your remote Function code immediately as you edit the system (run ```ks -m -l``` from ./output/run once you have downloaded your publish profile).
+
+[This](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/system/services/host/azureFunctionsHost.ts#L22) is the method that is called by Azure Functions each call. 
 
 #### AWS Lambda
 
