@@ -24,7 +24,7 @@ export default class qnaDialog extends serviceBase implements contracts.IDialog{
     var result = await this._qnaMaker.getAnswer(question);
 ```
 
-Once dialogs are registered on the IOC container, they will be automatially added to the bot. Add them to the IOC container by exposing them via [a module](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/dialogs/dialogIndex.ts).
+Once dialogs are registered on the IOC container, they will be [automatically added](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/startup.ts#L56) to the bot. Add them to the IOC container by exposing them via [the dialogIndex module](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/dialogs/dialogIndex.ts). 
 
 
 
@@ -148,7 +148,7 @@ There are a few modes of development you might like to choose depending on your 
 
 This mode is simple to start (instructions are for [Visual Studio Code](https://code.visualstudio.com/))
 
-- Kick off a build using ```crtl-shift-b```. On the output screen you should see something like ```10:14:11 AM - Compilation complete. Watching for file changes.```
+- Kick off a build using ```ctrl-shift-b```. On the output screen you should see something like ```10:14:11 AM - Compilation complete. Watching for file changes.```
 - Open a new terminal window (```ctrl-~``` is the default shortcut to bring this up.)
 - Type ```npm run outputwatch``` to watch output file changes using nodemon. 
 - Edit your files, connect to your bot and off you go!
