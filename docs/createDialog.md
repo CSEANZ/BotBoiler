@@ -1,7 +1,7 @@
 
 ## Create a dialog
 
-Dialogs are the center of bots. Adding them is super simple in this framework. Dialogs are exposed via the ```dialogIndex``` module. Any dialog that is exposed here will be automatically added to the IOC Container ([Inversify](http://inversify.io/)) and added to the bot dialog. Any dialog exposed in this way can ask for any other component or service that has been registered to be injected at runtime. 
+Dialogs are the heart of most bots. Adding them is super simple in this framework. Dialogs are exposed via the ```dialogIndex``` module. Any dialog that is exposed here will be automatically added to the IOC Container ([Inversify](http://inversify.io/)) and added to the bot dialog. Any dialog exposed in this way can ask for any other component or service that has been registered to be injected at runtime. 
 
 ### Add the dialog
 
@@ -9,11 +9,11 @@ Dialogs are the center of bots. Adding them is super simple in this framework. D
 
 Let's create a super simple two step dialog. 
 
-Dialogs are javascript [classes](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) in this framework. They implement the ```IDialog``` interface. This interfaces says we need to expose each step as an array via the ```waterfall()``` getter. 
+Dialogs are javascript [classes](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) in this framework. They implement the [```IDialog```](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/system/contract/contracts.ts#L24) interface. You can see the [interface](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/system/contract/contracts.ts#L24) says we need to expose each step as an array via the ```waterfall()``` getter. 
 
-At the end of the day Dialogs are still based on the [waterfall](https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-dialog-manage-conversation-flow) approach if you'd like to do further reading on that.  
+At the end of the day Dialogs are still based on the [waterfall](https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-dialog-manage-conversation-flow) approach - you may like to do further reading on that if you're not familiar with the concept before moving forward.  
 
-First, create a new dialog under src/dialogs. Use this template to get started. It sets up the dialog for injection etc. In this example we'll not take any injected dependencies for simplicity (more on that further down). 
+First, create a new dialog under src/dialogs. Use this template to get started. It sets up the dialog for injection, extends the base class and implements the IDialog interface. In this example we'll not take any injected dependencies for simplicity (more on that further down). 
 
 ```typescript
 import { serviceBase } from './../system/services/serviceBase';
@@ -49,7 +49,7 @@ There are two steps, each one matches an available signature in the ```IDialogWa
 
 The steps are exposed via the ```get waterfall()``` accessor. The order they are listed here is the order they will "waterfall" during a conversation. 
 
-#### Add some chat
+#### Add a chat
 
 Inside ```step1``` let's add some chat: 
 
