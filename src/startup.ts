@@ -106,7 +106,7 @@ export default class startup {
         var sh = new serverHelper();
 
         this._config = {
-            port: process.env.port || process.env.PORT || 3978,
+            port: process.env.port || process.env.PORT || "3978",
             microsoftAppId: process.env.MICROSOFT_APP_ID,
             microsoftAppPassword: process.env.MICROSOFT_APP_PASSWORD,
             luisModelUrl: process.env.LUIS_MODEL_URL,

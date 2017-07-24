@@ -70,6 +70,38 @@ gulp.task('updategenerator', function () {
     }
   });
 
+  var vscodesource = path.join(gulpRanInThisFolder, '/.vscode');
+  var vscodedestination = path.join(destinationfolder, '/.vscode');
+
+  copy(vscodesource, vscodedestination, (r, err) => {
+
+    if (!r) {
+      return console.error(err);
+    }
+  });
+
+  var docssource = path.join(gulpRanInThisFolder, '/docs');
+  var docsdestination = path.join(destinationfolder, '/docs');
+
+  copy(docssource, docsdestination, (r, err) => {
+
+    if (!r) {
+      return console.error(err);
+    }
+  });
+
+
+  var envsource = path.join(gulpRanInThisFolder, '.env');
+
+
+  copy(envsource, path.join(destinationfolder, '.env'), (r, err) => {
+
+    if (!r) {
+      return console.error(err);
+    }
+    
+  });
+ 
 
   var packagesource = path.join(gulpRanInThisFolder, 'package.json');
 
@@ -100,8 +132,8 @@ gulp.task('updategenerator', function () {
 
   });
 
-});
 
+});
 
 function copy(source, destination, callback) {
   var ncp = require('ncp').ncp;
