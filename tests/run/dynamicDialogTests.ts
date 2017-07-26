@@ -14,7 +14,7 @@ class testDynamicDialog extends testBase{
     }
 
     test_getEntity_sendsSay(t:TestContext){
-        var dialog = this.resolveDialog<contracts.IDialog>('dataDialog');
+        var dialog = this.resolve<contracts.IDialog>(contracts.contractSymbols.dataDialog);
         t.truthy(dialog);
 
         var dialogData = this.getTestDialogData();        
@@ -42,7 +42,7 @@ class testDynamicDialog extends testBase{
     }
 
     test_getEntity_prepLuisDataWithEntity(t:TestContext){
-        var dialog = this.resolveDialog<contracts.IDialog>('dataDialog');
+        var dialog = this.resolve<contracts.IDialog>(contracts.contractSymbols.dataDialog);
         t.truthy(dialog);
 
         var dialogData = this.getTestDialogData();        
@@ -70,7 +70,7 @@ class testDynamicDialog extends testBase{
     }
 
     test_getEntity_prepLuisDataWithoutEntity(t:TestContext){
-        var dialog = this.resolveDialog<contracts.IDialog>('dataDialog');
+        var dialog = this.resolve<contracts.IDialog>(contracts.contractSymbols.dataDialog);
         t.truthy(dialog);
 
         var dialogData = this.getTestDialogData();        
@@ -104,7 +104,7 @@ class testDynamicDialog extends testBase{
     }
 
     test_validates(t: TestContext) {
-        var dialog = this.resolveDialog<contracts.IDialog>('dataDialog');
+        var dialog = this.resolve<contracts.IDialog>(contracts.contractSymbols.dataDialog);
         t.truthy(dialog);
 
         var dialogData = this.getTestDialogData();
@@ -114,7 +114,7 @@ class testDynamicDialog extends testBase{
         t.false(result);     
         
         //test to ensure validation fails for id
-        var dialog2 = this.resolveDialog<contracts.IDialog>('dataDialog');
+        var dialog2 = this.resolve<contracts.IDialog>(contracts.contractSymbols.dataDialog);
         
         var dialogData2 = this.getTestDialogData();
         

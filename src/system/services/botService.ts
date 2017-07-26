@@ -13,7 +13,7 @@ export class botService extends serviceBase implements contracts.IBotService {
     private _hostService: contracts.IHostService;
     private _bot: builder.UniversalBot;
     private _dialogs: contracts.IDialog;
-    
+
     /**
      * 
      * @param  {} @inject(contracts.contractSymbols.IHostService
@@ -91,7 +91,7 @@ export class botService extends serviceBase implements contracts.IBotService {
             triggerText: 'SubmitTicket',
             id: 'submitTicketDialog',
             data: d,
-            initialSay: 'Okay! So you want to submit a ticket hey? Lets get that sorted';
+            initialSay: 'Okay! So you want to submit a ticket hey? Lets get that sorted'
         }
 
         return graphDialog;

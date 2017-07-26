@@ -3,6 +3,7 @@ import * as builder from 'botbuilder';
 
 import { serviceBase } from './../../system/services/serviceBase';
 import * as contracts  from '../../system/contract/contracts';
+import dynamicDialogBase from './dynamicDialogBase';
 
 /**
  * dataDialog is a dialog that can take external configuration to build a waterfall bot dialog, 
@@ -11,13 +12,8 @@ import * as contracts  from '../../system/contract/contracts';
  * 
  */
 @injectable()
-export default class dataDialog extends serviceBase implements contracts.IDialog{
-    id: string;
+export default class dataDialog extends dynamicDialogBase{    
     name: string = "dataDialog";
-    trigger: string | RegExp;
-    
-    waterfall: builder.IDialogWaterfallStep[]    
-
     private _dialog:contracts.graphDialog;
 
     /**
