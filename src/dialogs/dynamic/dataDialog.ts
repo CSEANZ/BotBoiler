@@ -5,7 +5,7 @@ import { serviceBase } from './../../system/services/serviceBase';
 import * as contracts  from '../../system/contract/contracts';
 
 /**
- * dataDialog is a dialog that can take external confiration to build a waterfall bot dialog, 
+ * dataDialog is a dialog that can take external configuration to build a waterfall bot dialog, 
  * as opposed to having to code each step. This allows external configuration of conversations
  * via a graphical tool for example. 
  * 

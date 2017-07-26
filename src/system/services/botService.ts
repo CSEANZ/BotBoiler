@@ -4,14 +4,23 @@ import { injectable, inject } from "inversify";
 import * as contracts from "../contract/contracts";
 import { serviceBase } from "./serviceBase";
 
-
+/**
+ * botService is the main class that creates the bot and registers the dialogs. 
+ */
 @injectable()
 export class botService extends serviceBase implements contracts.IBotService {
 
     private _hostService: contracts.IHostService;
     private _bot: builder.UniversalBot;
     private _dialogs: contracts.IDialog;
-
+    
+    /**
+     * 
+     * @param  {} @inject(contracts.contractSymbols.IHostService
+     * @param  {contracts.IHostService} hostService
+     * @param  {} @inject("Factory<IDialog>"
+     * @param  {()=>contracts.IDialog} dialogs
+     */
     constructor( @inject(contracts.contractSymbols.IHostService) hostService: contracts.IHostService,
         @inject("Factory<IDialog>") dialogs: () => contracts.IDialog) {
         super();
@@ -20,6 +29,9 @@ export class botService extends serviceBase implements contracts.IBotService {
         this._hostService = hostService;
     }
 
+    /**
+     * Boot the bot - creates a connector, bot and registers the dynamic dialogs. 
+     */
     public boot() {
 
         var connector = new builder.ChatConnector({
@@ -49,6 +61,9 @@ export class botService extends serviceBase implements contracts.IBotService {
         this._bot.dialog(dDynamic.id, dDynamic.waterfall).triggerAction({ matches: dDynamic.trigger })
     }
 
+    /**
+     * If LUIS is present this will enable the LUIS Recognizer and apply it to the bot. 
+     */
     private _enableLuis() {
         if (this.config.luisModelUrl && this.config.luisModelUrl.length > 0) {
             var luisRecognizer = new builder.LuisRecognizer(this.config.luisModelUrl)
