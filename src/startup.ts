@@ -53,8 +53,7 @@ export default class startup {
         });        
     }
 
-    private _registerDialogs() {
-        var ds = dialogs;
+    private _registerDialogs() {      
 
         for (var i in dialogs) {
 
