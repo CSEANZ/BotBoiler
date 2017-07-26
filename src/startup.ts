@@ -11,11 +11,15 @@ import { azureFunctionsHostService } from './system/services/host/azureFunctions
 
 import { IConfig, serverTypes } from "./system/contract/systemEntities";
 import { botService } from "./system/services/botService";
+
 import * as dialogs from "./dialogs/dialogIndex";
+import dataDialog from "./dialogs/dynamic/dataDialog";
+
 import { netClient } from "./system/helpers/netClient";
 
 import * as modelContracts from './model/modelContracts';
 import qnaComponent from './model/components/samples/qnaComponent';
+import { configBase } from "./system/services/serviceBase";
 
 export default class startup {
 
@@ -26,7 +30,7 @@ export default class startup {
 
     constructor() {
         this._container = new Container();
-
+        configBase.Container = this._container;
         this._setupSystemServices();
         this._setupHostService();      
         this._registerDialogFactory();        
@@ -64,6 +68,11 @@ export default class startup {
                     .to(dialog).whenTargetNamed(i);
             }
         }      
+
+        //the special data dialog. 
+         this._container.bind<contracts.IDialog>(contracts.contractSymbols.dataDialog)
+             .to(dataDialog);
+        
     }
 
     //you can now pull the dialogs from the container like this...
@@ -97,7 +106,7 @@ export default class startup {
             .to(botService).inSingletonScope();
 
         this._container.bind<contracts.INetClient>(contracts.contractSymbols.INetClient)
-            .to(netClient).inSingletonScope();
+            .to(netClient).inSingletonScope();        
     }
 
     private _prepConfig(): IConfig {

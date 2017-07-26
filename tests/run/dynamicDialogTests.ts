@@ -41,6 +41,68 @@ class testDynamicDialog extends testBase{
 
     }
 
+    test_getEntity_prepLuisDataWithEntity(t:TestContext){
+        var dialog = this.resolveDialog<contracts.IDialog>('dataDialog');
+        t.truthy(dialog);
+
+        var dialogData = this.getTestDialogData();        
+        var result = dialog.init(dialogData);
+
+        var args = this.getArgsWithEntity();
+        
+        var func = dialog.waterfall[0];
+
+        t.truthy(func);
+
+        var next = sinon.spy();
+        var textSpy = sinon.spy(builder.Prompts, 'text');
+        //var sessionStub = sinon.createStubInstance(MyConstructor) ;
+        var session: builder.Session = this.getSession();
+        
+
+        func(session, args, next);
+        
+        textSpy.restore();
+        
+        t.is(session.dialogData[dialogData.data.fields[0].luisEntityName], 'networking');
+        t.not(session.dialogData[dialogData.data.fields[0].luisEntityName], undefined);     
+
+    }
+
+    test_getEntity_prepLuisDataWithoutEntity(t:TestContext){
+        var dialog = this.resolveDialog<contracts.IDialog>('dataDialog');
+        t.truthy(dialog);
+
+        var dialogData = this.getTestDialogData();        
+        var result = dialog.init(dialogData);
+
+        var args = this.getArgsWithNoEntity();
+        
+        var func = dialog.waterfall[1];
+
+        t.truthy(func);
+
+        var next = sinon.spy();
+        var textSpy = sinon.spy(builder.Prompts, 'text');
+        //var sessionStub = sinon.createStubInstance(MyConstructor) ;
+        var session: builder.Session = this.getSession();
+        
+
+        func(session, {response:null}, next);
+        
+        t.true(next.callCount == 0);
+        t.true(textSpy.callCount != 0);
+        t.is(textSpy.getCall(0).args[1], dialogData.data.fields[0].promptText);
+
+        textSpy.restore();
+        
+       
+       // t.true(textSpy.calledWith(dialogData.data.fields[0].promptText));
+             
+        
+
+    }
+
     test_validates(t: TestContext) {
         var dialog = this.resolveDialog<contracts.IDialog>('dataDialog');
         t.truthy(dialog);
@@ -110,3 +172,5 @@ var testClass = new testDynamicDialog();
 
 test(testClass.test_validates.bind(testClass));
 test(testClass.test_getEntity_sendsSay.bind(testClass));
+test(testClass.test_getEntity_prepLuisDataWithEntity.bind(testClass));
+test(testClass.test_getEntity_prepLuisDataWithoutEntity.bind(testClass));
