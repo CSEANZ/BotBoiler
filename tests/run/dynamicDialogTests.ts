@@ -29,10 +29,11 @@ class testDynamicDialog extends testBase{
         var next = sinon.spy();
         var textSpy = sinon.spy(builder.Prompts, 'text');
         //var sessionStub = sinon.createStubInstance(MyConstructor) ;
-        var session: builder.Session = sinon.createStubInstance(builder.Session);
+        var session: builder.Session = this.getSession();
         var sendSpy:sinon.SinonSpy = session.send as sinon.SinonSpy;
 
         func(session, args, next);
+        
         textSpy.restore();
 
         t.true(sendSpy.calledOnce);

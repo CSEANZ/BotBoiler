@@ -42,7 +42,10 @@ export default class dataDialog extends serviceBase implements contracts.IDialog
     }
 
     private setupSteps(){
-        this.waterfall.push(this.step1.bind(this));
+        if(this._dialog.initialSay){
+            var initial = this.initialStep();
+            this.waterfall.push(initial.bind(this));
+        }    
     }
 
     private validate():boolean{
@@ -71,9 +74,36 @@ export default class dataDialog extends serviceBase implements contracts.IDialog
         this.logger.log(`Dynamic dialog issue: ${error}`);
     }
 
-    step1(session: builder.Session, args:any, next:Function) {
-        if(this._dialog.initialSay){
-            session.send(this._dialog.initialSay);
+    private extractLuisEntity(session:builder.Session, args:any){
+
+        if(!this._dialog.data || !this._dialog.data.fields || this._dialog.data.fields.length == 0){
+            return;
         }
+
+        if(!args || !args.intent || !args.intent.entities){
+            return;
+        }
+
+        for(let i in this._dialog.data.fields){
+            let field = this._dialog.data.fields[i];
+            let entity = builder.EntityRecognizer.findEntity(args.intent.entities, field.luisEntityName);
+            if(entity){
+                session.dialogData[field.luisEntityName] = entity;
+            }
+        }         
     }
+
+    initialStep(){
+        return (session: builder.Session, args:any, next:Function) => {
+            if(this._dialog.initialSay){
+                session.send(this._dialog.initialSay);  
+            }
+            
+            if(this._dialog.isLuis){
+                this.extractLuisEntity(session, args);
+            }            
+        }
+    } 
+
+
 }
