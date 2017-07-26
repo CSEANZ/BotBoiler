@@ -21,6 +21,9 @@ import * as modelContracts from './model/modelContracts';
 import qnaComponent from './model/components/samples/qnaComponent';
 import { configBase } from "./system/services/serviceBase";
 
+/**
+ * Main startup class. Composes the app components in to the inversify IOC container
+ */
 export default class startup {
 
     public _container: Container;
@@ -38,16 +41,27 @@ export default class startup {
         this._registerDialogs();  
     }
     
+    /**
+     * Add any custom components you write to the container here
+     */
     private _registerCustomComponents(){
          //Your services registered here   
         this._container.bind<modelContracts.IQnaComponent>(modelContracts.modelSymbols.IQnaComponent)
                 .to(qnaComponent);   
     }
-
+    
+    /**
+     * Helper property to resolve the bot service. 
+     * @returns contracts
+     */
     public get botService(): contracts.IBotService {
         return this._container.get<contracts.IBotService>(contracts.contractSymbols.IBotService);
     }
 
+    /**
+     * Creates the dialog factory that can be used later to inject all registered dialogs in to a class
+     * Example of this is on the botService class where dialogs() are injected. 
+     */
     private _registerDialogFactory(){
         this._container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
             .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
@@ -57,6 +71,9 @@ export default class startup {
         });        
     }
 
+    /**
+     * Dynamically register any dialogs that are exposed from dialogIndex on the container
+     */
     private _registerDialogs() {      
 
         for (var i in dialogs) {
@@ -80,7 +97,9 @@ export default class startup {
     // var all = this.container.getAll<contracts.IDialog>("dialog");        
     // var d = this.container.getNamed<contracts.IDialog>("dialog", "someBasicDialog");
         
-
+    /**
+     * Detect the current host (local, AWS or Functions) and register the appropriate service on the container
+     */
     private _setupHostService() {
 
         if (this._config.serverType == serverTypes.AzureFunctions) {
@@ -94,7 +113,10 @@ export default class startup {
                 .to(localHostService).inSingletonScope();
         }
     }
-
+    
+    /**
+     * Registers a bunch of services needed by the system on the container
+     */
     private _setupSystemServices() {
         this._container.bind<IConfig>(contracts.contractSymbols.IConfig)
             .toConstantValue(this._prepConfig());
@@ -108,7 +130,10 @@ export default class startup {
         this._container.bind<contracts.INetClient>(contracts.contractSymbols.INetClient)
             .to(netClient).inSingletonScope();        
     }
-
+    /**
+     * Imports the config from environment vars to the strongly typed IConfig object
+     * @returns IConfig
+     */
     private _prepConfig(): IConfig {
 
         var sh = new serverHelper();
@@ -125,11 +150,19 @@ export default class startup {
 
         return this._config;
     }
-
+    
+    /**
+     * Property to access the IOC container
+     * @returns Container
+     */
     public get container():Container{
         return this._container;
     }
 
+    /**
+     * Property to access the IConfig object
+     * @returns IConfig
+     */
     public get config():IConfig{
         return this._config;
     }

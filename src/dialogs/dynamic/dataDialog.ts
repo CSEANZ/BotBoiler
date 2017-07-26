@@ -170,7 +170,10 @@ export default class dataDialog extends serviceBase implements contracts.IDialog
             }
         };
     }
-
+    /**
+     * Runs after other data collection steps to collage and execute upon the data that has been collected from the user. 
+     * @param  {string} previousFieldName?
+     */
     executeUponDataStep(previousFieldName?:string){
         return (session: builder.Session, results:builder.IDialogResult<string>, next:Function) =>{
             
