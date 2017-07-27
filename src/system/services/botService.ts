@@ -53,11 +53,8 @@ export class botService extends serviceBase implements contracts.IBotService {
         }
 
         var dDynamic:contracts.IDialog = this.resolve<contracts.IDialog>(contracts.contractSymbols.dataDialog);
-
-        var dialogConfig = this.getTestDialogData();
-
+        var dialogConfig = this.getOpeningTimesDialogData();
         dDynamic.init(dialogConfig);
-
         this._bot.dialog(dDynamic.id, dDynamic.waterfall).triggerAction({ matches: dDynamic.trigger })
     }
 
@@ -78,7 +75,7 @@ export class botService extends serviceBase implements contracts.IBotService {
     getTestDialogData(): contracts.graphDialog {
 
         var fields: contracts.dialogField[] = [{
-            luisEntityName: 'category',
+            entityName: 'category',
             promptText: 'Please enter a category'
         }];
 
@@ -100,6 +97,30 @@ export class botService extends serviceBase implements contracts.IBotService {
             id: 'submitTicketDialog',
             data: d,
             initialSay: 'Okay! So you want to submit a ticket hey? Lets get that sorted'
+        }
+
+        return graphDialog;
+    }
+
+    getOpeningTimesDialogData():contracts.graphDialog{        
+        var fields: contracts.dialogField[] = [{
+            entityName: 'postcode',
+            promptText: 'Which post code?'
+        }];
+
+        var d:contracts.dialogData = {
+            fields:fields
+        }
+
+        var graphDialog:contracts.graphDialog = {
+            isLuis: true,
+            triggerText: 'ShowOpeningTimes',
+            id: 'openingTimesDialog',
+            data: d,
+            initialSay: `So you're looking for opening times.`,
+            action:{
+                serviceUrl:"https://graphpizza.azurewebsites.net/api/OpeningTimes?code=LEg3pxudN1cxVi/aQvjx9IPQzy1bLJyqVqcfIW9iMVJh5BAdULXF6Q=="
+            }
         }
 
         return graphDialog;
