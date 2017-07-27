@@ -40,7 +40,7 @@ interface graphDialog{
 }
 
 interface dialogAction{    
-    serviceUrl?:string;
+    serviceUrlAfter?:string;
     nextDialog?:string;
 }
 
@@ -52,6 +52,7 @@ interface dialogField{
     //text that will ask if the field is missing
     promptText:string;
     entityName?:string;
+    choice?:string[];
 }
 
 interface serviceResult{
@@ -68,4 +69,4 @@ let contractSymbols = {
 }
 
 export {contractSymbols, ILogService, IHostService, IBotService, IDialog, INetClient,
-    graphDialog, dialogData, dialogField};
+    graphDialog, dialogData, dialogField, serviceResult};

@@ -64,7 +64,15 @@ export default class dataDialog extends dynamicDialogBase{
         if(this._dialog.data && this._dialog.data.fields && this._dialog.data.fields.length > 0){
             for(let i in this._dialog.data.fields){
                 let field = this._dialog.data.fields[i];
-                let step = this.collectDataStep(field.entityName, field.promptText, previousFieldName);
+
+                let step: builder.IDialogWaterfallStepl = null;
+
+                if(field.choice && field.choice.length > 0){
+                    step = this.collectChoiceStep(field.entityName, field.promptText,field.choice, previousFieldName);
+                }else{
+                    step = this.collectDataStep(field.entityName, field.promptText, previousFieldName);
+                }
+               
                 this.waterfall.push(step.bind(this));
                 previousFieldName = field.entityName;
             }
@@ -145,7 +153,36 @@ export default class dataDialog extends dynamicDialogBase{
         };
     } 
 
-    
+    private _setPreviousStep(session: builder.Session, results:builder.IDialogResult<string>, previousFieldName?:string){
+        if(previousFieldName && results && results.response){
+
+            var res = JSON.stringify(results.response);
+
+            console.log(res);
+
+            let data:any = results.response;
+
+            if(data.entity){
+                data = data.entity;
+            }
+
+            session.dialogData[previousFieldName] = data;
+            session.send(`Setting ${previousFieldName} to ${data}`);
+        }
+    }
+
+    collectChoiceStep(fieldName:string, promptText:string, choice:string[], previousFieldName?:string){
+        return (session: builder.Session, results:builder.IDialogResult<string>, next:Function) =>{
+            this._setPreviousStep(session, results, previousFieldName);
+
+            if(!session.dialogData[fieldName]){                
+                builder.Prompts.choice(session, promptText, choice);
+            }else{
+                next();
+            }
+        }
+    }
+
     /**
      * Collect missing data that was not yet available in the session dialogData
      * @param  {string} fieldName
@@ -155,10 +192,7 @@ export default class dataDialog extends dynamicDialogBase{
     collectDataStep(fieldName:string, promptText:string, previousFieldName?:string){
         return (session: builder.Session, results:builder.IDialogResult<string>, next:Function) =>{
             
-            if(previousFieldName && results && results.response){
-                session.dialogData[previousFieldName] = results.response;
-                session.send(`Setting ${previousFieldName} to ${results.response}`);
-            }
+            this._setPreviousStep(session, results, previousFieldName);
             
             if(!session.dialogData[fieldName]){                
                 builder.Prompts.text(session, promptText);
@@ -174,17 +208,14 @@ export default class dataDialog extends dynamicDialogBase{
     executeUponDataStep(previousFieldName?:string){
         return async (session: builder.Session, results:builder.IDialogResult<string>, next:Function) =>{
             
-            if(previousFieldName && results && results.response){
-                session.dialogData[previousFieldName] = results.response;
-                session.send(`Setting ${previousFieldName} to ${results.response}`);
-            }
-            
+            this._setPreviousStep(session, results, previousFieldName);
+
             if(this._dialog.action){
                 var action = this._dialog.action;
 
-                if(action.serviceUrl){                   
+                if(action.serviceUrlAfter){                   
 
-                    var result = await this._netClient.postJson<any, contracts.serviceResult>(action.serviceUrl, "", session.dialogData);
+                    var result = await this._netClient.postJson<any, contracts.serviceResult>(action.serviceUrlAfter, "", session.dialogData);
                     if(result.text){
                         session.send(result.text);
                     }

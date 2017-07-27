@@ -52,10 +52,17 @@ export class botService extends serviceBase implements contracts.IBotService {
             this._bot.dialog(dialog.id, dialog.waterfall).triggerAction({ matches: dialog.trigger });
         }
 
-        var dDynamic:contracts.IDialog = this.resolve<contracts.IDialog>(contracts.contractSymbols.dataDialog);
-        var dialogConfig = this.getOpeningTimesDialogData();
-        dDynamic.init(dialogConfig);
-        this._bot.dialog(dDynamic.id, dDynamic.waterfall).triggerAction({ matches: dDynamic.trigger })
+        var dlThings: contracts.graphDialog[] = new Array<contracts.graphDialog>();
+        dlThings.push(this.getStartOrderDialogData());
+        dlThings.push(this.getOpeningTimesDialogData());
+        
+
+        for(let i in dlThings){
+            let dialogConfig = dlThings[i];
+            let dDynamic:contracts.IDialog = this.resolve<contracts.IDialog>(contracts.contractSymbols.dataDialog);           
+            dDynamic.init(dialogConfig);
+            this._bot.dialog(dDynamic.id, dDynamic.waterfall).triggerAction({ matches: dDynamic.trigger });
+        }        
     }
 
     /**
@@ -119,8 +126,30 @@ export class botService extends serviceBase implements contracts.IBotService {
             data: d,
             initialSay: `So you're looking for opening times.`,
             action:{
-                serviceUrl:"https://graphpizza.azurewebsites.net/api/OpeningTimes?code=LEg3pxudN1cxVi/aQvjx9IPQzy1bLJyqVqcfIW9iMVJh5BAdULXF6Q=="
+                serviceUrlAfter:"https://graphpizza.azurewebsites.net/api/OpeningTimes?code=LEg3pxudN1cxVi/aQvjx9IPQzy1bLJyqVqcfIW9iMVJh5BAdULXF6Q=="
             }
+        }
+
+        return graphDialog;
+    }
+
+    getStartOrderDialogData():contracts.graphDialog{        
+        var fields: contracts.dialogField[] = [{
+            entityName: 'deliveryMode',
+            promptText: 'Would you like take away or home delivery?',
+            choice:["Home Delivery", "Pickup"]
+        }];
+
+        var d:contracts.dialogData = {
+            fields:fields
+        }
+
+        var graphDialog:contracts.graphDialog = {
+            isLuis: true,
+            triggerText: 'StartOrder',
+            id: 'startOrderDialog',
+            data: d,
+            initialSay: `Okay, let's get us some pizza!`           
         }
 
         return graphDialog;

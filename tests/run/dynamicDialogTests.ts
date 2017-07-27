@@ -188,8 +188,30 @@ class testDynamicDialog extends testBase{
             data: d,
             initialSay: `So you're looking for opening times.`,
             action:{
-                serviceUrl:"https://graphpizza.azurewebsites.net/api/OpeningTimes?code=LEg3pxudN1cxVi/aQvjx9IPQzy1bLJyqVqcfIW9iMVJh5BAdULXF6Q=="
+                serviceUrlAfter:"https://graphpizza.azurewebsites.net/api/OpeningTimes?code=LEg3pxudN1cxVi/aQvjx9IPQzy1bLJyqVqcfIW9iMVJh5BAdULXF6Q=="
             }
+        }
+
+        return graphDialog;
+    }
+
+    getStartOrderDialogData():contracts.graphDialog{        
+        var fields: contracts.dialogField[] = [{
+            entityName: 'deliveryMode',
+            promptText: 'Would you like take away or home delivery?',
+            choice:["Home Delivery", "Pickup"]
+        }];
+
+        var d:contracts.dialogData = {
+            fields:fields
+        }
+
+        var graphDialog:contracts.graphDialog = {
+            isLuis: true,
+            triggerText: 'StartOrder ',
+            id: 'startOrderDialog',
+            data: d,
+            initialSay: `Okay, let's get us some pizza!`           
         }
 
         return graphDialog;
