@@ -86,9 +86,17 @@ export class botService extends serviceBase implements contracts.IBotService {
             fields: fields
         }
 
+        // var graphDialog: contracts.graphDialog = {
+        //     isLuis: true,
+        //     triggerText: 'SubmitTicket',
+        //     id: 'submitTicketDialog',
+        //     data: d,
+        //     initialSay: 'Okay! So you want to submit a ticket hey? Lets get that sorted'
+        // }
+
         var graphDialog: contracts.graphDialog = {
-            isLuis: true,
-            triggerText: 'SubmitTicket',
+            isLuis: false,
+            triggerRegex: /^subs$/i,
             id: 'submitTicketDialog',
             data: d,
             initialSay: 'Okay! So you want to submit a ticket hey? Lets get that sorted'
