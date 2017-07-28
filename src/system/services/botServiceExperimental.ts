@@ -78,8 +78,9 @@ export class botService extends serviceBase implements contracts.IBotService {
                         // (override the default behavior of replacing the stack)
                         session.beginDialog(args.action, args);
                     }
-                });
+                }).beginDialogAction('timeAction', 'openingTimesDialog', { matches: 'ShowOpeningTimes' });
         }
+            console.log("****** setup");
     }
 
     /**
@@ -91,6 +92,7 @@ export class botService extends serviceBase implements contracts.IBotService {
                 .onEnabled(function (context, callback) {                   
                     
                     var enabled = context.dialogStack().length === 0;
+                    console.log("LUIS GOing");
                     callback(null, true);
                 }).onFilter(function(context, result, callback) {
                     // If the "AskForWater" intent is returned from LUIS, the intent is changed to "Filtered".

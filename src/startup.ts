@@ -10,7 +10,7 @@ import { localHostService } from "./system/services/host/localHostService";
 import { azureFunctionsHostService } from './system/services/host/azureFunctionsHost';
 
 import { IConfig, serverTypes } from "./system/contract/systemEntities";
-import { botService } from "./system/services/botService";
+import { botService } from "./system/services/botServiceExperimental";
 
 import * as dialogs from "./dialogs/dialogIndex";
 import dataDialog from "./dialogs/dynamic/dataDialog";
