@@ -65,7 +65,7 @@ export default class dataDialog extends dynamicDialogBase{
             for(let i in this._dialog.data.fields){
                 let field = this._dialog.data.fields[i];
 
-                let step: builder.IDialogWaterfallStepl = null;
+                let step: builder.IDialogWaterfallStep = null;
 
                 if(field.choice && field.choice.length > 0){
                     step = this.collectChoiceStep(field.entityName, field.promptText,field.choice, previousFieldName);
