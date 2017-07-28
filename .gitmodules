@@ -1,6 +1,0 @@
-[submodule "submodules/botboiler-tasks"]
-	path = submodules/botboiler-tasks
-	url = https://github.com/MSFTAuDX/botboiler-tasks.git
-[submodule "submodules/generator-botboiler"]
-	path = submodules/generator-botboiler
-	url = https://github.com/MSFTAuDX/generator-botboiler.git
