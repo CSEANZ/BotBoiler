@@ -70,7 +70,7 @@ export class botService extends serviceBase implements contracts.IBotService {
             let dialogConfig = dlThings[i];
             let dDynamic: contracts.IDialog = this.resolve<contracts.IDialog>(contracts.contractSymbols.dataDialog);
             dDynamic.init(dialogConfig);
-            this._bot.dialog(dDynamic.id, dDynamic.waterfall).triggerAction(
+            let d = this._bot.dialog(dDynamic.id, dDynamic.waterfall).triggerAction(
                 { 
                     matches: dDynamic.trigger, 
                     onSelectAction: (session, args, next) => {
@@ -78,9 +78,28 @@ export class botService extends serviceBase implements contracts.IBotService {
                         // (override the default behavior of replacing the stack)
                         session.beginDialog(args.action, args);
                     }
-                }).beginDialogAction('timeAction', 'openingTimesDialog', { matches: 'ShowOpeningTimes' });
+                });
+
+                this._addActions(d, dialogConfig, dlThings);
         }
             console.log("****** setup");
+    }
+
+    private _addActions(dialog: builder.Dialog, currentDialogData: contracts.graphDialog, dialogs: contracts.graphDialog[]){
+        for (let i in dialogs) {
+
+            let dialogConfig = dialogs[i];
+            
+            if(currentDialogData === dialogConfig){
+                continue;
+            }
+
+            var trigger:string|RegExp = (dialogConfig.triggerText || dialogConfig.triggerRegex);
+
+            dialog.beginDialogAction(`${dialogConfig.id}_action`, dialogConfig.id, {
+                matches: trigger
+            });
+        }
     }
 
     /**
@@ -178,6 +197,21 @@ export class botService extends serviceBase implements contracts.IBotService {
             id: 'startOrderDialog',
             data: d,
             initialSay: `Okay, let's get us some pizza!`
+        }
+
+        return graphDialog;
+    }
+
+    getInOrderDialogData(): contracts.graphDialog { 
+
+        var graphDialog: contracts.graphDialog = {
+            isLuis: true,
+            triggerText: 'StartOrder',
+            id: 'startOrderDialog',            
+            initialSay: `Okay, let's get us some pizza!`,
+            action:{
+                serviceUrlText:"https://graphpizza.azurewebsites.net/api/OpeningTimes?code=LEg3pxudN1cxVi/aQvjx9IPQzy1bLJyqVqcfIW9iMVJh5BAdULXF6Q=="
+            }
         }
 
         return graphDialog;

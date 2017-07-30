@@ -36,12 +36,15 @@ interface graphDialog{
     triggerRegex?:RegExp;
     id:string; 
     initialSay?:string;   
+    subsequentSay?:string;
     action?:dialogAction;
 }
 
 interface dialogAction{    
     serviceUrlAfter?:string;
     nextDialog?:string;
+    serviceUrlText?:string;
+    textUrlPrompt?:string;
 }
 
 interface dialogData{
