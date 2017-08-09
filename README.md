@@ -1,7 +1,18 @@
 # BotBoiler
-*Boilerplate code for Typescript based bots built with the Microsoft Botbuilder framework*
+*Enterprise boilerplate code for TypeScript based bots built with the Microsoft Botbuilder framework*
 
-BotBoiler is base code to get you started with an enterprise scale Node+Typescript based bot that uses the Microsoft Bot Framework and the Botbuilder package. Works with ```restify``` (for local development), Azure Functions and soon AWS Lambda.
+
+The best way to get started is with the [Yoeman Generator](https://github.com/MSFTAuDX/generator-botboiler). 
+```
+npm install -g yo
+npm install -g generator-botboiler
+
+yo botboiler
+```
+
+This base code helps you get started building composable, injectable and testable bots using the software design principles you know and love - like dependency injection and separation of concerns, unit testing and more. The code is not tucked away in an NPM - you have full control over the code to modify as your project needs. The system leverages and builds upon the ```Microsoft botbuilder``` framework. 
+
+The base code works with ```restify``` (for local development), Azure Functions and soon AWS Lambda out of the box. 
 
 It's core tenets are that it must be composable, testable, extensible, adhere to separation of concerns and above all be simple, elegant and maintainable.
 
