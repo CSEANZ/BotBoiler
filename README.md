@@ -10,7 +10,7 @@ npm install -g generator-botboiler
 yo botboiler
 ```
 
-This base code helps you get started building composable, injectable and testable bots using the software design principles you know and love - like dependency injection and separation of concerns, unit testing and more. 
+This base code helps you get started building composable, injectable and testable bots using the software design principles you know and love - like dependency injection and separation of concerns, unit testing and more. The code is not tucked away in an NPM - you have full control over the code to modify as your project needs. The system leverages and builds upon the ```Microsoft botbuilder``` framework. 
 
 The base code works with ```restify``` (for local development), Azure Functions and soon AWS Lambda out of the box. 
 
