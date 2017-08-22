@@ -24,6 +24,6 @@ export default class someBasicDialog implements contracts.IDialog{
     }
 
     private step2(session, results, next){
-        session.endConversation(`Welcome, ${results.response}`);
+        session.endDialog(`Welcome ending 1, ${results.response}`);
     }
 }

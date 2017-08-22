@@ -7,6 +7,8 @@ Dialogs are the heart of most bots. Adding them is super simple in this framewor
 
 **Note** there are some [samples](https://github.com/MSFTAuDX/BotBoiler/tree/master/src/dialogs/samples) you can follow. 
 
+**Note** You can install our [vscode extension](https://marketplace.visualstudio.com/items?itemName=jakkaj.botboiler-helpers) which provides snippets to help create dialogs!
+
 Let's create a super simple two step dialog. 
 
 Dialogs are javascript [classes](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) in this framework. They implement the [```IDialog```](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/system/contract/contracts.ts#L24) interface. You can see the [interface](https://github.com/MSFTAuDX/BotBoiler/blob/master/src/system/contract/contracts.ts#L24) says we need to expose each step as an array via the ```waterfall()``` getter. 

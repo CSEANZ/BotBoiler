@@ -1,4 +1,8 @@
+import * as builder from 'botbuilder';
+import * as sinon from 'sinon';
+
 import startup from '../src/startup';
+
 
 export class testBase{
     
@@ -13,5 +17,13 @@ export class testBase{
     }
     public resolveDialog<T>(dialog:string){
         return this._startup.container.getNamed<T>("dialog", dialog);
+    }
+
+    public getSession():builder.Session{
+        var session = sinon.createStubInstance(builder.Session);
+        session.dialogData = ()=>{};
+        sinon.spy(session, "dialogData");
+
+        return session;
     }
 }

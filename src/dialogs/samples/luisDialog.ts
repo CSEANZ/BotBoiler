@@ -13,7 +13,12 @@ export default class luisDialog extends serviceBase implements contracts.IDialog
     public get waterfall(): builder.IDialogWaterfallStep[]{
         return [this.step1.bind(this), this.step2];
     }
-
+    /**
+     * Step 1
+     * @param  {builder.Session} session
+     * @param  {any} args
+     * @param  {Function} next
+     */
     step1(session: builder.Session, args:any, next:Function)  {
         
         //var sSession = JSON.stringify(session);
@@ -24,7 +29,11 @@ export default class luisDialog extends serviceBase implements contracts.IDialog
         if(entity) next({ response: entity.entity });
         else builder.Prompts.text(session, 'Please provide entityName');
     }
-
+    /**
+     * @param  {builder.Session} session
+     * @param  {builder.IDialogResult<string>} results
+     * @param  {Function} next
+     */
     step2(session: builder.Session, results:builder.IDialogResult<string>, next:Function) {
                 session.endConversation(`You said ${results.response}`);
     }
