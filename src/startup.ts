@@ -17,9 +17,17 @@ import dataDialog from "./dialogs/dynamic/dataDialog";
 
 import { netClient } from "./system/helpers/netClient";
 
+import * as routerContracts from './system/router/routerContracts';
+
+import {Command} from './system/router/command';
+import {Provider} from './system/router/provider';
+import {Router} from './system/router/router';
+
 import * as modelContracts from './model/modelContracts';
 import qnaComponent from './model/components/samples/qnaComponent';
 import { configBase } from "./system/services/serviceBase";
+
+
 
 /**
  * Main startup class. Composes the app components in to the inversify IOC container
@@ -39,6 +47,7 @@ export default class startup {
         this._registerDialogFactory();        
         this._registerCustomComponents();
         this._registerDialogs();  
+        this._registerRouter();
     }
     
     /**
@@ -90,6 +99,12 @@ export default class startup {
          this._container.bind<contracts.IDialog>(contracts.contractSymbols.dataDialog)
              .to(dataDialog);
         
+    }
+
+    private _registerRouter() {
+        this._container.bind<routerContracts.ICommand>(routerContracts.modelSymbols.ICommand).to(Command);
+        this._container.bind<routerContracts.IRouter>(routerContracts.modelSymbols.IRouter).to(Router).inSingletonScope();
+        this._container.bind<routerContracts.IProvider>(routerContracts.modelSymbols.IProvider).to(Provider).inSingletonScope();
     }
 
     //you can now pull the dialogs from the container like this...
