@@ -7,4 +7,4 @@ import luisDialog from './samples/luisDIalog';
 import qnaDialog from './samples/qnaDialog';
 import agentDialog from './samples/agentDialog';
 
-export { someBasicDialog, luisDialog, qnaDialog, agentDialog}; 
+export {someBasicDialog, someBasicDialog2, luisDialog, qnaDialog}; 
