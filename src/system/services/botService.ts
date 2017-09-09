@@ -3,6 +3,7 @@ import * as builder from 'botbuilder';
 import { injectable, inject } from "inversify";
 import * as contracts from "../contract/contracts";
 import { serviceBase } from "./serviceBase";
+import * as routerContracts from '../router/routerContracts';
 
 /**
  * botService is the main class that creates the bot and registers the dialogs. 
@@ -13,7 +14,8 @@ export class botService extends serviceBase implements contracts.IBotService {
     private _hostService: contracts.IHostService;
     private _bot: builder.UniversalBot;
     private _dialogs: contracts.IDialog;
-
+    private _router: routerContracts.IRouter;
+    private _command: routerContracts.ICommand;
     /**
      * 
      * @param  {} @inject(contracts.contractSymbols.IHostService
@@ -22,11 +24,15 @@ export class botService extends serviceBase implements contracts.IBotService {
      * @param  {()=>contracts.IDialog} dialogs
      */
     constructor( @inject(contracts.contractSymbols.IHostService) hostService: contracts.IHostService,
-        @inject("Factory<IDialog>") dialogs: () => contracts.IDialog) {
+        @inject("Factory<IDialog>") dialogs: () => contracts.IDialog,
+        @inject(routerContracts.modelSymbols.IRouter) router: routerContracts.IRouter,
+        @inject(routerContracts.modelSymbols.ICommand) command: routerContracts.ICommand) {
         super();
 
         this._dialogs = dialogs();
         this._hostService = hostService;
+        this._router = router;
+        this._command = command;
     }
 
     /**
@@ -45,6 +51,8 @@ export class botService extends serviceBase implements contracts.IBotService {
             session.endDialog(`I'm sorry, I did not understand '${session.message.text}'.\nType 'help' to know more about me :)`);
         });
 
+        this._enableRouter();
+        
         this._enableLuis();
 
         for (var i in this._dialogs) {
@@ -77,6 +85,11 @@ export class botService extends serviceBase implements contracts.IBotService {
                 });
             this._bot.recognizer(luisRecognizer);
         }
+    }
+
+    private _enableRouter() {
+        this._router.SetBot(this._bot);
+        this._bot.use(this._command.Middleware(), this._router.Middleware());
     }
 
     getTestDialogData(): contracts.graphDialog {
