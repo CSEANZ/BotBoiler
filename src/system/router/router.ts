@@ -8,34 +8,56 @@ import {IRouter, IProvider} from './routerContracts';
 @injectable()
 export class Router implements IRouter{
 
-    /** Provides the bot instance for this router */
+    
+    /**
+     * Provides the bot instance for this router
+     * @param  {builder.UniversalBot} bot
+     */
     public SetBot(bot: builder.UniversalBot) {
         this._bot = bot;
     }
 
     private _bot : builder.UniversalBot;
-    /** Returns the bot instance of this router */
+    /**
+     * Returns the bot instance of this router
+     * @returns builder
+     */
     public Bot (): builder.UniversalBot {
         return this._bot;
     }
 
     private _provider = new Provider();
-    /** Returns the provider for this router */
+    
+    /**
+     * Returns the provider for this router
+     * @returns IProvider
+     */
     public Provider(): IProvider {
         return this._provider;
     }
 
-    /**Returns whether the session belongs to an agent */
+    
+    /**
+     * Returns whether the session belongs to an agent
+     * @param  {builder.Session} session
+     * @returns boolean
+     */
     public IsAgent(session: builder.Session): boolean {
         return session.conversationData.isAgent;
     }
 
-    /**Returns number of conversations in the queue */
+    /**
+     * Returns number of users in queue
+     * @returns number
+     */
     public Pending () : number {
         return this._provider.CurrentConversations().filter((conv) => conv.state === ConversationState.WaitingForAgent).length;
     };
 
-     /** This method returns a function to be added to bot.on(...) */
+    /**
+     * This method returns a function to be added to bot.on(...)
+     * @returns builder.IMiddlewareMap
+     */
     public Middleware (): builder.IMiddlewareMap {
         return {
             botbuilder: (session, next) => {
