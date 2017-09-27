@@ -19,7 +19,10 @@ export class Command implements routerContracts.ICommand {
         return this._router.IsAgent(session);
     }
 
-    /** This method returns a function to be added to bot.on(...) */
+    /**
+     * This method returns a function to be added to bot.on(...)
+     * @returns builder.IMiddlewareMap
+     */
     public Middleware () : builder.IMiddlewareMap  { return {
         botbuilder: (session, next) => {
             console.log('command middleware');
@@ -34,7 +37,12 @@ export class Command implements routerContracts.ICommand {
         };
     };
 
-    /** Scans a message for possible commands from an agent */
+    
+    /**
+     * Scans a message for possible commands from an agent
+     * @param  {builder.Session} session
+     * @param  {} next
+     */
     public AgentCommand (session: builder.Session, next) {
         const message = session.message;
         const conversation = this._provider.FindByAgentConversationId(message.address.conversation.id);
@@ -80,7 +88,11 @@ export class Command implements routerContracts.ICommand {
         next();
     };
 
-    /**Adds a session to the wait queue */
+    /**
+     * Adds a session to the wait queue
+     * @param  {builder.Session} session
+     * @returns boolean
+     */
     public QueueMe (session: builder.Session): boolean {
         const message = session.message;
         // lookup the conversation (create it if one doesn't already exist)

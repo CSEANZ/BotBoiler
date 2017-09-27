@@ -19,12 +19,20 @@ export class Provider implements routerContracts.IProvider{
     }
     private _data: routerContracts.IConversation[];
 
-    /**returns an array of conversations in queue */
+
+    /**
+     * returns an array of conversations in queue
+     * @returns routerContracts
+     */
     public CurrentConversations(): routerContracts.IConversation[] {
         return this._data;
     };
 
-    /** Creates a conversation and adds it to the list*/
+    /**
+     * Creates a conversation and adds it to the list
+     * @param  {builder.IAddress} address
+     * @returns routerContracts
+     */
     public CreateConversation(address: builder.IAddress): routerContracts.IConversation {
         const conversation = {
             timestamp: new Date().getTime(),
@@ -38,17 +46,31 @@ export class Provider implements routerContracts.IProvider{
         return conversation;
     };
 
-    /** find a conversation by its user conversation id */
+   
+    /**
+     * find a conversation by its user conversation id
+     * @param  {string} id
+     * @returns routerContracts
+     */
     public FindByUserConversationId(id: string): routerContracts.IConversation {
         return this._data.find((conversation) => conversation.user.conversation.id === id);
     };
 
-    /** find a conversation by its agent conversation id */
+    
+    /**
+     * find a conversation by its agent conversation id
+     * @param  {string} id
+     * @returns routerContracts
+     */
     public FindByAgentConversationId(id: string): routerContracts.IConversation {
         return this._data.find((conversation) => conversation.agent && conversation.agent.conversation.id === id);
     };
 
-    /** find a conversation by its agent conversation id and connect to agent*/
+    /**
+     * find a conversation by its agent conversation id and connect to agent
+     * @param  {builder.IAddress} agent
+     * @returns routerContracts
+     */
     public PeekConversation(agent: builder.IAddress): routerContracts.IConversation {
         var conversation = this._data.sort((a, b) => a.timestamp - b.timestamp).find((conversation) => conversation.state === ConversationState.WaitingForAgent);
         if (conversation) {

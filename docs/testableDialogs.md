@@ -163,3 +163,5 @@ t.is(next.callCount, 0);
 This code runs the function and passes in the stubs and spies. Once it's run it checks to see if the spys and stubs were run (or not!). Any deviation here will result in an incorrect test and it will fail. 
 
  For an example of the inverted "has enough data to call ```next()``` test" see the full listing of ```testStep1_hasEntity``` [here](https://github.com/MSFTAuDX/BotBoiler/blob/master/tests/run/samples/dialog/testLuisDialog.ts).
+
+ Next >> [Handoff to Human](https://github.com/MSFTAuDX/BotBoiler/blob/master/docs/handoff.md)
