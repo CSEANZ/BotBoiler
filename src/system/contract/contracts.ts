@@ -68,7 +68,12 @@ let contractSymbols = {
     IHostService: Symbol("IHostService"),
     IBotService: Symbol("IBotService"), 
     INetClient: Symbol("INetClient"),
-    dataDialog: Symbol("dataDialog")
+    dataDialog: Symbol("dataDialog"),
+    ISentimentService: Symbol("ISentimentService")
+}
+
+export interface ISentimentService {
+    GetSentiment(text: string): Promise<number>;
 }
 
 export {contractSymbols, ILogService, IHostService, IBotService, IDialog, INetClient,
