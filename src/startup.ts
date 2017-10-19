@@ -27,6 +27,7 @@ import * as modelContracts from './model/modelContracts';
 import qnaComponent from './model/components/samples/qnaComponent';
 import { configBase } from "./system/services/serviceBase";
 
+import { TranslatorTextService } from './system/services/cognitive/translatorTextService';
 
 
 /**
@@ -160,7 +161,9 @@ export default class startup {
             luisModelUrl: process.env.LUIS_MODEL_URL,
             serverType: sh.getServerType(),
             qna_id: process.env.QNA_ID,
-            qna_subs: process.env.QNA_SUBS_KEY
+            qna_subs: process.env.QNA_SUBS_KEY,
+            translatorTextAPIKey: process.env.Translator_Text_API_Key,
+            translatorTextAPIUrl: process.env.Translator_Text_API_Url
         }
 
         return this._config;
