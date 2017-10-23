@@ -5,7 +5,13 @@ interface ILogService{
     setLogCallback(callback:(logMessage:string) => any);
 }
 
+export interface ITranslatorTextService {
+    Detect(text: string): Promise<string>;
+    Translate(text: string, to: string, from?: string) : Promise<string>;
+}
+
 interface INetClient{
+    getJson(url: string, headers?: any): Promise<any>;
     postJson<TUpload, TResult>(url:string, path:string, postData:TUpload, headers?:any):Promise<TResult>;
 }
 
@@ -68,7 +74,8 @@ let contractSymbols = {
     IHostService: Symbol("IHostService"),
     IBotService: Symbol("IBotService"), 
     INetClient: Symbol("INetClient"),
-    dataDialog: Symbol("dataDialog")
+    dataDialog: Symbol("dataDialog"),
+    ITranslatorTextService: Symbol('ITranslatorTextService')
 }
 
 export {contractSymbols, ILogService, IHostService, IBotService, IDialog, INetClient,

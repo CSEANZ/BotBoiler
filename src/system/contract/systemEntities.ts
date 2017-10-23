@@ -5,7 +5,9 @@ export interface IConfig{
     luisModelUrl?: string,
     serverType?: serverTypes, 
     qna_id?:string,
-    qna_subs?:string
+    qna_subs?:string,
+    translatorTextAPIKey?: string,
+    translatorTextAPIUrl?: string
 }
 
 export enum serverTypes {
