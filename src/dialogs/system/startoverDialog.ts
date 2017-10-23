@@ -5,7 +5,9 @@ import { serviceBase } from './../../system/services/serviceBase';
 import * as contracts from '../../system/contract/contracts';
 
 /**
-* A bot dialog
+* this dialog invokes when user types "start over" 
+* it allows users to cancel the current conversation and start the new converstation 
+* https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-dialog-manage-conversation-flow
 */
 @injectable()
 export default class startoverDialog extends serviceBase implements contracts.IDialog {
@@ -25,15 +27,13 @@ export default class startoverDialog extends serviceBase implements contracts.ID
         return [this.step1.bind(this), this.step2.bind(this)];
     }
 
-    /**
-    * 
-    */
+
     constructor() {
         super();
     }
 
     /**
-    * Step 1
+    * asking user if they want to start over and reset the conversation
     * @param  {builder.Session} session
     * @param  {any} args
     * @param  {Function} next
@@ -42,17 +42,31 @@ export default class startoverDialog extends serviceBase implements contracts.ID
         builder.Prompts.confirm(session, `Are you sure?`);
     }
 
+
+    /**
+     * If user confirms to start over- ending the converstion and cleaing the states 
+     * If user doesn't confirm - close the start over dialog without any action
+     * @param  {builder.Session} session
+     * @param  {any} args
+     * @param  {Function} next
+     */
     private step2(session: builder.Session, args: any, next: Function) {
 
         if (args.response) {
 
-            if (session.userData && session.userData.brokerId) {
-                session.userData.brokerId = null;
+            session.send("sure, resetting the converstaion");
+
+            //optional - cleaning the state  
+            if (session.userData) {
+                session.userData = {};
             }
-            if (session.privateConversationData && session.privateConversationData.appId) {
-                session.privateConversationData.appId = null;
+            if (session.privateConversationData) {
+                session.privateConversationData = {};
             }
-            session.endConversation("starting over ....");
+            if (session.conversationData) {
+                session.conversationData = {};
+            }
+            session.endConversation();
         }
         else {
             session.endDialogWithResult({ response: null });
