@@ -5,8 +5,9 @@ interface ILogService{
     setLogCallback(callback:(logMessage:string) => any);
 }
 
-interface INetClient{
-    postJson<TUpload, TResult>(url:string, path:string, postData:TUpload, headers?:any):Promise<TResult>;
+interface INetClient {
+    getJson(url: string, headers?: any): Promise<any>;
+    postJson<TUpload, TResult>(url: string, path: string, postData: TUpload, headers?: any): Promise<TResult>;
 }
 
 interface IHostService{
@@ -17,6 +18,11 @@ interface IHostService{
 
 interface IBotService{
     boot();
+}
+
+interface ITokenService {
+    init(bearer: string, channelId: string, conversationId: string, idToken: string, userId: string);
+    process(): Promise<any>;
 }
 
 //this is adapted from generator-botbuilder here: https://github.com/MicrosoftDX/generator-botbuilder/blob/master/generators/app/templates/dialogs-ts/idialog.ts
@@ -68,8 +74,9 @@ let contractSymbols = {
     IHostService: Symbol("IHostService"),
     IBotService: Symbol("IBotService"), 
     INetClient: Symbol("INetClient"),
-    dataDialog: Symbol("dataDialog")
+    dataDialog: Symbol("dataDialog"),
+    ITokenService: Symbol("ITokenService"),
 }
 
 export {contractSymbols, ILogService, IHostService, IBotService, IDialog, INetClient,
-    graphDialog, dialogData, dialogField, serviceResult};
+    graphDialog, dialogData, dialogField, serviceResult, ITokenService};
