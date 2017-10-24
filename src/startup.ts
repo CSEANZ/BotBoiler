@@ -1,33 +1,35 @@
-
 import "reflect-metadata";
 import { Container, interfaces } from "inversify"
+
+import { IdentityService } from './services/implementations/identityService';
+import { StorageService } from './services/implementations/storageService';
+import * as serviceContracts from './services/serviceContracts';
+
 import * as contracts from "./system/contract/contracts";
 
+import { configBase } from "./system/services/serviceBase";
+import { botService } from "./system/services/botService";
 import { logService } from "./system/services/logService";
-import { serverHelper } from "./system/helpers/serverHelper";
+import { tokenService } from "./system/services/tokenService";
 
 import { localHostService } from "./system/services/host/localHostService";
 import { azureFunctionsHostService } from './system/services/host/azureFunctionsHost';
 
 import { IConfig, serverTypes } from "./system/contract/systemEntities";
-import { botService } from "./system/services/botService";
 
 import * as dialogs from "./dialogs/dialogIndex";
 import dataDialog from "./dialogs/dynamic/dataDialog";
 
 import { netClient } from "./system/helpers/netClient";
+import { serverHelper } from "./system/helpers/serverHelper";
 
 import * as routerContracts from './system/router/routerContracts';
-
-import {Command} from './system/router/command';
-import {Provider} from './system/router/provider';
-import {Router} from './system/router/router';
+import { Command } from './system/router/command';
+import { Provider } from './system/router/provider';
+import { Router } from './system/router/router';
 
 import * as modelContracts from './model/modelContracts';
 import qnaComponent from './model/components/samples/qnaComponent';
-import { configBase } from "./system/services/serviceBase";
-
-
 
 /**
  * Main startup class. Composes the app components in to the inversify IOC container
@@ -43,22 +45,22 @@ export default class startup {
         this._container = new Container();
         configBase.Container = this._container;
         this._setupSystemServices();
-        this._setupHostService();      
-        this._registerDialogFactory();        
+        this._setupHostService();
+        this._registerDialogFactory();
         this._registerCustomComponents();
-        this._registerDialogs();  
+        this._registerDialogs();
         this._registerRouter();
     }
-    
+
     /**
      * Add any custom components you write to the container here
      */
-    private _registerCustomComponents(){
-         //Your services registered here   
+    private _registerCustomComponents() {
+        //Your services registered here   
         this._container.bind<modelContracts.IQnaComponent>(modelContracts.modelSymbols.IQnaComponent)
-                .to(qnaComponent);   
+            .to(qnaComponent);
     }
-    
+
     /**
      * Helper property to resolve the bot service. 
      * @returns contracts
@@ -71,19 +73,19 @@ export default class startup {
      * Creates the dialog factory that can be used later to inject all registered dialogs in to a class
      * Example of this is on the botService class where dialogs() are injected. 
      */
-    private _registerDialogFactory(){
+    private _registerDialogFactory() {
         this._container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
             .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
                 return () => {
-                    return context.container.getAll<contracts.IDialog>("dialog");                
+                    return context.container.getAll<contracts.IDialog>("dialog");
                 };
-        });        
+            });
     }
 
     /**
      * Dynamically register any dialogs that are exposed from dialogIndex on the container
      */
-    private _registerDialogs() {      
+    private _registerDialogs() {
 
         for (var i in dialogs) {
 
@@ -93,12 +95,12 @@ export default class startup {
                 this._container.bind<contracts.IDialog>("dialog")
                     .to(dialog).whenTargetNamed(i);
             }
-        }      
+        }
 
         //the special data dialog. 
-         this._container.bind<contracts.IDialog>(contracts.contractSymbols.dataDialog)
-             .to(dataDialog);
-        
+        this._container.bind<contracts.IDialog>(contracts.contractSymbols.dataDialog)
+            .to(dataDialog);
+
     }
 
     private _registerRouter() {
@@ -111,7 +113,7 @@ export default class startup {
     //or use the Factory<IDialog> to inject as demonstrated in the constructor of botService
     // var all = this.container.getAll<contracts.IDialog>("dialog");        
     // var d = this.container.getNamed<contracts.IDialog>("dialog", "someBasicDialog");
-        
+
     /**
      * Detect the current host (local, AWS or Functions) and register the appropriate service on the container
      */
@@ -121,14 +123,14 @@ export default class startup {
             this._container.bind<contracts.IHostService>(contracts.contractSymbols.IHostService)
                 .to(azureFunctionsHostService).inSingletonScope();
         }
-        else if(this._config.serverType == serverTypes.AWSLambda){
-            throw ("AWS NOT DONE YET :)");   
+        else if (this._config.serverType == serverTypes.AWSLambda) {
+            throw ("AWS NOT DONE YET :)");
         } else {
             this._container.bind<contracts.IHostService>(contracts.contractSymbols.IHostService)
                 .to(localHostService).inSingletonScope();
         }
     }
-    
+
     /**
      * Registers a bunch of services needed by the system on the container
      */
@@ -143,7 +145,16 @@ export default class startup {
             .to(botService).inSingletonScope();
 
         this._container.bind<contracts.INetClient>(contracts.contractSymbols.INetClient)
-            .to(netClient).inSingletonScope();        
+            .to(netClient).inSingletonScope();
+
+        this._container.bind<contracts.ITokenService>(contracts.contractSymbols.ITokenService)
+            .to(tokenService).inSingletonScope();
+
+        this._container.bind<serviceContracts.IIdentityService>(serviceContracts.modelSymbols.IIdentityService)
+            .to(IdentityService);
+
+        this._container.bind<serviceContracts.IStorageService>(serviceContracts.modelSymbols.IStorageService)
+            .to(StorageService);
     }
     /**
      * Imports the config from environment vars to the strongly typed IConfig object
@@ -165,12 +176,12 @@ export default class startup {
 
         return this._config;
     }
-    
+
     /**
      * Property to access the IOC container
      * @returns Container
      */
-    public get container():Container{
+    public get container(): Container {
         return this._container;
     }
 
@@ -178,7 +189,7 @@ export default class startup {
      * Property to access the IConfig object
      * @returns IConfig
      */
-    public get config():IConfig{
+    public get config(): IConfig {
         return this._config;
     }
 }

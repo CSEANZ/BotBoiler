@@ -3,23 +3,18 @@ import { injectable, inject } from "inversify";
 import * as jwt from 'jsonwebtoken';
 import * as xmldom from "xmldom";
 import * as serviceContracts from '../serviceContracts';
-import * as contracts from "../../system/contract/contracts";
-import { IConfig } from "../../system/contract/systemEntities";
 import { serviceBase } from '../../system/services/serviceBase'
 import * as systemContracts from '../../system/contract/contracts';
 
 @injectable()
 export class IdentityService implements serviceContracts.IIdentityService {
-    private _config: IConfig;
     private _logService: systemContracts.ILogService;
     private _netClient: systemContracts.INetClient;
 
     constructor(
-        @inject(contracts.contractSymbols.IConfig) config: IConfig,
         @inject(systemContracts.contractSymbols.INetClient) netClient: systemContracts.INetClient,
         @inject(systemContracts.contractSymbols.ILogService) logService: systemContracts.ILogService) {
 
-        this._config = config;
         this._logService = logService;
         this._netClient = netClient;
     }

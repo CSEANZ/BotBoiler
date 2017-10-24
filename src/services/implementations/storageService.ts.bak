@@ -2,25 +2,21 @@ import * as  azureStorage from 'azure-storage';
 import * as  envx from 'envx';
 import { injectable, inject } from "inversify";
 import * as serviceContracts from '../serviceContracts';
-import * as contracts from "../../system/contract/contracts";
-import { IConfig } from "../../system/contract/systemEntities";
 import { serviceBase } from '../../system/services/serviceBase'
 import * as systemContracts from '../../system/contract/contracts';
+
+// const AZURE_STORAGE_ACCOUNT = envx("AZURE_STORAGE_ACCOUNT");
+// const AZURE_STORAGE_ACCESS_KEY = envx("AZURE_STORAGE_ACCESS_KEY");
+// const AZURE_STORAGE_CONNECTION_STRING = envx("AZURE_STORAGE_CONNECTION_STRING");
 
 @injectable()
 export class StorageService implements serviceContracts.IStorageService {
     private _blobService;
-    private _config: IConfig;
     private _logService: systemContracts.ILogService;
 
-    constructor(
-        @inject(contracts.contractSymbols.IConfig) config: IConfig,
-        @inject(systemContracts.contractSymbols.ILogService) logService: systemContracts.ILogService) {
-
-        this._config = config;
-        this._logService = logService;
-
+    constructor( @inject(systemContracts.contractSymbols.ILogService) logService: systemContracts.ILogService) {
         this._blobService = azureStorage.createBlobService();
+        this._logService = logService;
     }
 
     async CreateBlockBlob(container: string, name: string, json: string): Promise<void> {
