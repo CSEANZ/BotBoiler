@@ -57,7 +57,13 @@ export class botService extends serviceBase implements contracts.IBotService {
 
         for (var i in this._dialogs) {
             var dialog: contracts.IDialog = this._dialogs[i];
-            this._bot.dialog(dialog.id, dialog.waterfall).triggerAction({ matches: dialog.trigger });
+            if (dialog.triggerActionOptions) {
+                this._bot.dialog(dialog.id, dialog.waterfall).triggerAction(dialog.triggerActionOptions);
+            }
+            else {
+                this._bot.dialog(dialog.id, dialog.waterfall).triggerAction({ matches: dialog.trigger });
+                }
+
         }
 
         var dlThings: contracts.graphDialog[] = new Array<contracts.graphDialog>();

@@ -26,7 +26,9 @@ interface IDialog {
     name: string;
     trigger: string | RegExp;
     waterfall: builder.IDialogWaterfallStep[];
+    triggerActionOptions?: builder.ITriggerActionOptions;
     init?:(dialog:graphDialog) => boolean;
+   
 }
 
 interface graphDialog{
