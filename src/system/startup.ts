@@ -1,4 +1,6 @@
 import "reflect-metadata";
+import { ConversationState, UserState, MemoryStorage, 
+    BotContext, BotFrameworkAdapter, Storage, BotState } from 'botbuilder';
 import { Container, interfaces } from "inversify"
 import * as contracts from "./contracts/systemContracts";
 import { configBase } from "./services/serviceBase";
@@ -27,7 +29,13 @@ export default class Startup {
         
     }
 
-    private _
+    private _setupDefaultBotServcies(){
+        var storage:Storage = new MemoryStorage();
+        var conversationState:BotState<BotConversationState> 
+            = new ConversationState<BotConversationState>(storage)
+        this._container.bind<Storage>(contracts.contractSymbols.Storage)
+        .toConstantValue(storage);
+    }    
 
     private _setupSystemServices() {
         this._container.bind<contracts.IConfig>(contracts.contractSymbols.IConfig)

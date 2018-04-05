@@ -33,7 +33,8 @@ let contractSymbols = {
     ILogService: Symbol("ILogService"),    
     IConfig: Symbol("IConfig"),
     IBotService: Symbol("IBotService"), 
-    IHostService: Symbol("IHostService")
+    IHostService: Symbol("IHostService"), 
+    Storage: Symbol("Storage")
 }
 
 export {contractSymbols};
