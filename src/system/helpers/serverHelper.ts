@@ -1,7 +1,6 @@
-
 //Thanks to https://github.com/vjrantal/bot-sample/blob/master/index.js
 
-import { serverTypes } from "../contract/systemEntities";
+import { serverTypes } from "../contracts/systemContracts";
 
 export class serverHelper {
     public getServerType(): serverTypes {

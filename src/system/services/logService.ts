@@ -1,7 +1,7 @@
 
-import { ILogService } from "../contract/contracts";
+import { ILogService } from "../contracts/systemContracts";
 import { injectable, inject } from "inversify";
-import * as contracts from "../contract/contracts";
+
 
 @injectable()
 class logService implements ILogService {

@@ -24,6 +24,7 @@ Inject functionality in to your dialogs as required to reduce complexity and inc
 
 ```typescript
 @injectable()
+//this is some comment
 export default class qnaDialog extends serviceBase implements contracts.IDialog{
     private _qnaMaker: modelContracts.IQnaComponent; 
 

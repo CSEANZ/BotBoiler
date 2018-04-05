@@ -1,13 +1,12 @@
 import { inject, injectable, Container } from "inversify";
 
-import * as contracts from "../contract/contracts";
-import { IConfig } from "../contract/systemEntities";
+import  * as systemContracts from "../contracts/systemContracts";
 
 @injectable()
 export class configBase{
 
-    @inject(contracts.contractSymbols.IConfig)
-    public config:IConfig;       
+    @inject(systemContracts.contractSymbols.IConfig)
+    public config:systemContracts.IConfig;       
     
     public static Container:Container;
 
@@ -18,6 +17,6 @@ export class configBase{
 
 @injectable()
 export class serviceBase extends configBase{    
-    @inject(contracts.contractSymbols.ILogService)
-    public logger: contracts.ILogService;
+    @inject(systemContracts.contractSymbols.ILogService)
+    public logger: systemContracts.ILogService;
 }
