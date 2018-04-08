@@ -1,6 +1,8 @@
 import "reflect-metadata";
-import { ConversationState, UserState, MemoryStorage, 
-    BotContext, BotFrameworkAdapter, Storage, BotState } from 'botbuilder';
+import {
+    ConversationState, UserState, MemoryStorage,
+    BotContext, BotFrameworkAdapter, Storage, BotState
+} from 'botbuilder';
 import { Container, interfaces } from "inversify"
 import * as contracts from "./contracts/systemContracts";
 import { configBase } from "./services/serviceBase";
@@ -8,7 +10,7 @@ import { serverHelper } from "./helpers/serverHelper";
 import { logService } from "./services/logService";
 import { botService } from "./services/botService";
 
-export default class Startup {
+export default abstract class Startup {
 
     public _container: Container;
     private _config: contracts.IConfig;
@@ -24,18 +26,70 @@ export default class Startup {
 
         this.ConfigureMiddleware();
     }
+    /**
+     * 
+     * 
+     * @template T 
+     * @returns {Startup} 
+     * @memberof Startup
+     */
+    public ConfigureMiddleware<T>(): Startup {
 
-    public ConfigureMiddleware(){
-        
+
+        return this;
+    }
+    /**
+     * Configure storage data type. Pass in instance or null to let the container
+     * resolve your type
+     * 
+     * @template T 
+     * @param {T} [storeInstance=null] 
+     * @returns {Startup} 
+     * @memberof Startup
+     */
+    public ConfigureStateStore<StorageType extends Storage = Storage>(storeType: new()=> StorageType): Startup {
+        this._container.bind<StorageType>(contracts.contractSymbols.Storage)
+            .to(storeType)
+            .inSingletonScope();
+        return this;
     }
 
-    private _setupDefaultBotServcies(){
-        var storage:Storage = new MemoryStorage();
-        var conversationState:BotState<BotConversationState> 
+    public ConfigureUserState<T>(): Startup {
+
+        return this;
+    }
+
+    public ConfigureConversationState<T>(): Startup {
+        
+        var state = new ConversationState<T>(new MemoryStorage());
+        
+        this.BindType<ConversationState<T>>()
+            .to(new ConversationState<T>())
+            .inSingletonScope();
+
+    }
+
+    public BindType<TInterface>(classType: new()=> TInterface, symbol:symbol, singleton:boolean = false){
+        var bind = this._container.bind<TInterface>(symbol)
+            .to(classType)
+            
+        if(singleton){
+            bind.inSingletonScope();
+        }
+    }
+
+    public BindInstance<TInterface>(classType: TInterface, symbol:symbol, singleton:boolean = false){
+        var bind = this._container.bind<TInterface>(symbol)
+            .toConstantValue(classType);
+    }
+
+    private _setupDefaultBotServcies() {
+        var storage: Storage = new MemoryStorage();
+        var conversationState: BotState<BotConversationState>
             = new ConversationState<BotConversationState>(storage)
         this._container.bind<Storage>(contracts.contractSymbols.Storage)
-        .toConstantValue(storage);
-    }    
+            .toConstantValue(storage);
+    }
 
     private _setupSystemServices() {
         this._container.bind<contracts.IConfig>(contracts.contractSymbols.IConfig)
