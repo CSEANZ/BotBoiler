@@ -63,11 +63,27 @@ export default abstract class Startup {
         
         var state = new ConversationState<T>(new MemoryStorage());
         
-        this.BindType<ConversationState<T>>()
-            .to(new ConversationState<T>())
+        this._container.bind<ConversationState<T>>()
+            .to(new ConversationState<T>(new MemoryStorage()))
             .inSingletonScope();
 
     }
+
+    private _conversationStateFactory(){
+        this._container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
+            .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
+                return () => {
+                    return context.container.getAll<contracts.IDialog>("dialog");                
+                };
+        });   
+    }
+
+    this._container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
+            .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
+                return () => {
+                    return context.container.getAll<contracts.IDialog>("dialog");                
+                };
+        });   
 
     public BindType<TInterface>(classType: new()=> TInterface, symbol:symbol, singleton:boolean = false){
         var bind = this._container.bind<TInterface>(symbol)

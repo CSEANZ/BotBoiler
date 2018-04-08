@@ -1,3 +1,14 @@
+
+let contractSymbols = {
+    ILogService: Symbol("ILogService"),    
+    IConfig: Symbol("IConfig"),
+    IBotService: Symbol("IBotService"), 
+    IHostService: Symbol("IHostService"), 
+    Storage: Symbol("Storage"),
+    ConversationStateObject: Symbol("ConversationStateObject"),
+    UserStateObject: Symbol("UserStateObject")
+}
+
 export interface IConfig{
     port: string,
     microsoftAppId?: string,
@@ -29,12 +40,6 @@ export interface ILogService{
     setLogCallback(callback:(logMessage:string) => any);
 }
 
-let contractSymbols = {
-    ILogService: Symbol("ILogService"),    
-    IConfig: Symbol("IConfig"),
-    IBotService: Symbol("IBotService"), 
-    IHostService: Symbol("IHostService"), 
-    Storage: Symbol("Storage")
-}
+
 
 export {contractSymbols};
