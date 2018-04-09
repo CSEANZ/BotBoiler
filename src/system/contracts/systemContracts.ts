@@ -1,7 +1,7 @@
 import { TurnContext, BotStateSet } from "botbuilder";
 
 import { 
-    DialogContext 
+    DialogContext, Prompt
 } from 'botbuilder-dialogs';
 
 let contractSymbols = {
@@ -20,7 +20,7 @@ export interface IDialogWaterfallStep{
 export interface IDialog {
     id: string;    
     trigger: string | RegExp;
-    waterfall: IDialogWaterfallStep[];
+    waterfall: IDialogWaterfallStep[] | Prompt[];    
     init?:() => void;
 }
 
