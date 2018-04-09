@@ -91,6 +91,10 @@ export default class Startup {
         return this;
     }
 
+    public Bind<TType>(classType: new () => TType) : Startup{
+        this._container.bind<TType>(classType).to(classType);
+        return this;
+    }
 
     public BindType<TInterface>(classType: new () => TInterface, 
             symbol: symbol, singleton: boolean = false) : Startup {
