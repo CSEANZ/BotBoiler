@@ -1,26 +1,42 @@
-import { inject } from "inversify";
+import { inject, injectable } from "inversify";
 
 import {
     ConversationState, UserState, MemoryStorage,
-    BotContext, BotFrameworkAdapter, Storage, BotState
+    BotFrameworkAdapter, Storage, BotState, TurnContext, BotStateSet
 } from 'botbuilder';
 
 import * as contracts from "../contracts/systemContracts";
 
-export default class stateService<TUserState, TConversationState>{
-    
-    private _conversationState : ConversationState<TConversationState>;
+import { IStorage } from "./extensios/MemoryStorageEx";
+
+@injectable()
+export default class stateService<TUserState, TConversationState> 
+    implements contracts.IStateService<TUserState,TConversationState> {
+
+    private _storage: IStorage;
+
+    private _conversationState: ConversationState<TConversationState>;
     private _userState: UserState<TUserState>;
-    
-    /**
-     *
-     */
-    
-    constructor(
-        @inject(contracts.contractSymbols.Storage)storage:Storage,
-        @inject(contracts.contractSymbols.ConversationState)conversationState:ConversationState<TConversationState>,
-        @inject(contracts.contractSymbols.UserState)userState:UserState<TUserState>,               
-    ) {
-        
+
+    constructor(@inject(contracts.contractSymbols.Storage) storage: IStorage) {
+        this._storage = storage;
+        this._conversationState = new ConversationState(this._storage.Storage);
+        this._userState = new UserState(this._storage.Storage);
     }
+
+    public getBotStateSet() : BotStateSet{
+        var stateSet = new BotStateSet();
+        stateSet.use(this._conversationState, this._userState);
+        return stateSet;
+    }    
+
+    public getUserState(context: TurnContext): TUserState {
+        return this._userState.get(context);
+    }
+
+    public getConversationState(context: TurnContext): TConversationState{
+        return this._conversationState.get(context);
+    }
+
+
 }

@@ -1,8 +1,9 @@
 import "reflect-metadata";
 import {
     ConversationState, UserState, MemoryStorage,
-    BotContext, BotFrameworkAdapter, Storage, BotState
+    BotFrameworkAdapter, Storage, BotState
 } from 'botbuilder';
+
 import { Container, interfaces } from "inversify"
 import * as contracts from "./contracts/systemContracts";
 import { configBase } from "./services/serviceBase";
@@ -10,7 +11,12 @@ import { serverHelper } from "./helpers/serverHelper";
 import { logService } from "./services/logService";
 import { botService } from "./services/botService";
 
-export default abstract class Startup {
+
+import { consoleHostService } from "./services/hosting/consoleHostService";
+import { IStorage } from "./services/extensios/MemoryStorageEx";
+import stateService from "./services/stateService";
+
+export default class Startup {
 
     public _container: Container;
     private _config: contracts.IConfig;
@@ -21,11 +27,14 @@ export default abstract class Startup {
     constructor() {
         this._container = new Container();
         configBase.Container = this._container;
-
-        this._setupSystemServices();
-
-        this.ConfigureMiddleware();
+        this._setupSystemServices();     
+       
     }
+
+    public get botService(): contracts.IBotService{
+        return this.Resolve<contracts.IBotService>(contracts.contractSymbols.IBotService);
+    }
+
     /**
      * 
      * 
@@ -34,10 +43,23 @@ export default abstract class Startup {
      * @memberof Startup
      */
     public ConfigureMiddleware<T>(): Startup {
-
-
         return this;
     }
+
+    public UseBot(botType: new()=> contracts.IBotService){
+        this._container.bind<contracts.IBotService>(contracts.contractSymbols.IBotService)
+        .to(botType)
+        .inSingletonScope();
+        
+    return this;
+    }
+
+    public UseConsoleHost<TUser, TConversation>():Startup{
+        this._container.bind<contracts.IHostService<TUser, TConversation>>(contracts.contractSymbols.IHostService)
+        .to(consoleHostService);
+        return this;
+    }
+
     /**
      * Configure storage data type. Pass in instance or null to let the container
      * resolve your type
@@ -47,43 +69,21 @@ export default abstract class Startup {
      * @returns {Startup} 
      * @memberof Startup
      */
-    public ConfigureStateStore<StorageType extends Storage = Storage>(storeType: new()=> StorageType): Startup {
-        this._container.bind<StorageType>(contracts.contractSymbols.Storage)
-            .to(storeType)
-            .inSingletonScope();
+    public UseStateStore<StorageType>(storeType: new()=> IStorage): Startup {
+        this._container.bind<IStorage>(contracts.contractSymbols.Storage)
+            .to(storeType);
+            
+        return this;
+    }   
+
+    public UseState<TUser, TConversation>(): Startup {
+        
+        this._container.bind<contracts.IStateService<TUser, TConversation>>(contracts.contractSymbols.IStateService)
+            .to(stateService);        
+
         return this;
     }
-
-    public ConfigureUserState<T>(): Startup {
-
-        return this;
-    }
-
-    public ConfigureConversationState<T>(): Startup {
-        
-        var state = new ConversationState<T>(new MemoryStorage());
-        
-        this._container.bind<ConversationState<T>>()
-            .to(new ConversationState<T>(new MemoryStorage()))
-            .inSingletonScope();
-
-    }
-
-    private _conversationStateFactory(){
-        this._container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
-            .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
-                return () => {
-                    return context.container.getAll<contracts.IDialog>("dialog");                
-                };
-        });   
-    }
-
-    this._container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
-            .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
-                return () => {
-                    return context.container.getAll<contracts.IDialog>("dialog");                
-                };
-        });   
+   
 
     public BindType<TInterface>(classType: new()=> TInterface, symbol:symbol, singleton:boolean = false){
         var bind = this._container.bind<TInterface>(symbol)
@@ -99,23 +99,18 @@ export default abstract class Startup {
             .toConstantValue(classType);
     }
 
-    private _setupDefaultBotServcies() {
-        var storage: Storage = new MemoryStorage();
-        var conversationState: BotState<BotConversationState>
-            = new ConversationState<BotConversationState>(storage)
-        this._container.bind<Storage>(contracts.contractSymbols.Storage)
-            .toConstantValue(storage);
+    public Resolve<T>(symbol:symbol){
+        return this._container.get<T>(symbol);
     }
+
+   
 
     private _setupSystemServices() {
         this._container.bind<contracts.IConfig>(contracts.contractSymbols.IConfig)
             .toConstantValue(this._prepConfig());
 
         this._container.bind<contracts.ILogService>(contracts.contractSymbols.ILogService)
-            .to(logService).inSingletonScope();
-
-        this._container.bind<contracts.IBotService>(contracts.contractSymbols.IBotService)
-            .to(botService).inSingletonScope();
+            .to(logService).inSingletonScope();      
     }
 
     private _prepConfig(): contracts.IConfig {
@@ -133,5 +128,13 @@ export default abstract class Startup {
         }
 
         return this._config;
+    }
+
+    /**
+     * Property to access the IOC container
+     * @returns Container
+     */
+    public get container():Container{
+        return this._container;
     }
 }

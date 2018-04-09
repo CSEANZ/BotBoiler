@@ -1,3 +1,4 @@
+import { TurnContext, BotStateSet } from "botbuilder";
 
 let contractSymbols = {
     ILogService: Symbol("ILogService"),    
@@ -5,8 +6,13 @@ let contractSymbols = {
     IBotService: Symbol("IBotService"), 
     IHostService: Symbol("IHostService"), 
     Storage: Symbol("Storage"),
-    ConversationState: Symbol("ConversationState"),
-    UserState: Symbol("UserState")
+    IStateService:Symbol("IStateService")
+}
+
+export interface IStateService<TUserState, TConversationState>{
+    getUserState(context: TurnContext): TUserState,
+    getConversationState(context: TurnContext): TConversationState, 
+    getBotStateSet() : BotStateSet
 }
 
 export interface IConfig{
@@ -19,9 +25,9 @@ export interface IConfig{
     qna_subs?:string
 }
 
-export interface IHostService{
-    init(connector:any);
-    export:any;
+export interface IHostService<TUserState, TConversationState>{
+    init();
+    
     log(message:string);
 }
 

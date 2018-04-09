@@ -12,7 +12,7 @@ export class localHostService extends configBase implements IHostService{
         super();
     }
 
-    init(connector:builder.ChatConnector){
+    init(connector:any/*connector:builder.ChatConnector*/){
 
         this.log("Local Context");
 
