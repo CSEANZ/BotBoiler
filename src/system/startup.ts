@@ -79,7 +79,9 @@ export default class Startup {
     public UseState<TUser, TConversation>(): Startup {
         
         this._container.bind<contracts.IStateService<TUser, TConversation>>(contracts.contractSymbols.IStateService)
-            .to(stateService);        
+            .to(stateService)
+            .inSingletonScope();
+            
 
         return this;
     }

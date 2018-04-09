@@ -3,7 +3,7 @@ import * as restify from 'restify';
 import * as builder from 'botbuilder';
 import { IHostService } from "../../contracts/systemContracts";
 import { serviceBase, configBase } from "../serviceBase";
-import { BotAdapter, ConsoleAdapter, BotStateSet } from 'botbuilder';
+import { BotAdapter, ConsoleAdapter, BotStateSet, TurnContext } from 'botbuilder';
 import * as contracts from "../../contracts/systemContracts";
 import { inject, injectable } from 'inversify';
 
@@ -21,7 +21,7 @@ export class consoleHostService<TUserState, TConversationState> implements IHost
             this._stateService = stateService;       
     }
 
-    init(){
+    init(callback:(context: TurnContext) => void){
        
         var adapter = new ConsoleAdapter();
         
@@ -31,11 +31,7 @@ export class consoleHostService<TUserState, TConversationState> implements IHost
 
         // Listen for incoming requests 
         adapter.listen(async (context) => {            
-            if (context.activity.type === 'message') {                
-                await context.sendActivity(`$You said "${context.activity.text}"`);
-            } else {
-                await context.sendActivity(`[${context.activity.type} event detected]`);
-            }
+            callback(context);
         });
     }
 

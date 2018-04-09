@@ -26,8 +26,7 @@ export interface IConfig{
 }
 
 export interface IHostService<TUserState, TConversationState>{
-    init();
-    
+    init(callback:(context: TurnContext) => void);    
     log(message:string);
 }
 

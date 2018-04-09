@@ -19,9 +19,12 @@ export default class stateService<TUserState, TConversationState>
     private _userState: UserState<TUserState>;
 
     constructor(@inject(contracts.contractSymbols.Storage) storage: IStorage) {
+        
         this._storage = storage;
-        this._conversationState = new ConversationState(this._storage.Storage);
-        this._userState = new UserState(this._storage.Storage);
+        this._conversationState = new ConversationState<TConversationState>(this._storage.Storage);
+        this._userState = new UserState<TUserState>(this._storage.Storage);
+
+        
     }
 
     public getBotStateSet() : BotStateSet{
@@ -34,7 +37,7 @@ export default class stateService<TUserState, TConversationState>
         return this._userState.get(context);
     }
 
-    public getConversationState(context: TurnContext): TConversationState{
+    public getConversationState(context: TurnContext): TConversationState{        
         return this._conversationState.get(context);
     }
 
