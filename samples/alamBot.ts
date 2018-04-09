@@ -1,7 +1,8 @@
 import { serviceBase } from "../src/system/services/serviceBase";
 import * as contracts from "../src/system/contracts/systemContracts";
-import { inject, injectable } from "inversify";
+import { inject, injectable, named } from "inversify";
 import { TurnContext } from "botbuilder";
+import { botService } from "../src/system/services/botService";
 
 
 export interface Alarm {
@@ -23,37 +24,42 @@ export interface AlarmUser {
 
 
 @injectable()
-export default class AlarmBot extends serviceBase implements contracts.IBotService {
-    
-    private _hostService : contracts.IHostService<AlarmUser, AlarmConversation>   
-    private _stateService: contracts.IStateService<AlarmUser, AlarmConversation>
-    /**
-     *
-     */
-    constructor(
-        @inject(contracts.contractSymbols.IHostService)
-        hostService : contracts.IHostService<AlarmUser, AlarmConversation>,
-        @inject(contracts.contractSymbols.IStateService)
-        stateService: contracts.IStateService<AlarmUser, AlarmConversation>
-    ) {
-        super();       
+export default class AlarmBot extends botService<AlarmUser, AlarmConversation> {   
+      
+    private _addAlarm:contracts.ITopic
 
-        this._hostService = hostService;
-        this._stateService = stateService;
-    }
-    
+    constructor(
+        @inject("topics") @named("addAlarm") addAlarm:contracts.ITopic
+    ) {
+        super();
+
+        this._addAlarm = addAlarm;
+    }   
+
     public boot(){
-        this._hostService.init(this.botCallback.bind(this));
+        super.boot();
     }
 
     public async botCallback(context:TurnContext){
         if (context.activity.type === 'message') {  
+            const utterance = (context.activity.text || '').trim().toLowerCase();
+            if (utterance.includes('add alarm')) {
+                await this._addAlarm.begin(context);
+            }
+            else{
+                switch (this.stateService.getConversationState(context).topic) {  
+                    case 'addAlarm':
+                        await this._addAlarm.routeReply(context);
+                        break;
+                    default:
+                    await context.sendActivity(`[${context.activity.type} event detected]`);
+                }
+            }
+            //     var state = this.stateService.getConversationState(context);
             
-            var state = this._stateService.getConversationState(context);
-            
-            const count = state.count === undefined ? state.count = 0 : ++state.count;
+            // const count = state.count === undefined ? state.count = 0 : ++state.count;
 
-            await context.sendActivity(`${count} You said Jordan "${context.activity.text}"`);
+            // await context.sendActivity(`${count} You said Jordan "${context.activity.text}"`);
         } else {
             await context.sendActivity(`[${context.activity.type} event detected]`);
         }

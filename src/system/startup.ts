@@ -27,11 +27,16 @@ export default class Startup {
     constructor() {
         this._container = new Container();
         configBase.Container = this._container;
-        this._setupSystemServices();     
-       
+        this._setupSystemServices();
+
     }
 
-    public get botService(): contracts.IBotService{
+    public Boot(): Startup {
+        this.botService.boot();
+        return this;
+    }
+
+    public get botService(): contracts.IBotService {
         return this.Resolve<contracts.IBotService>(contracts.contractSymbols.IBotService);
     }
 
@@ -46,17 +51,17 @@ export default class Startup {
         return this;
     }
 
-    public UseBot(botType: new()=> contracts.IBotService){
+    public UseBot(botType: new () => contracts.IBotService) {
         this._container.bind<contracts.IBotService>(contracts.contractSymbols.IBotService)
-        .to(botType)
-        .inSingletonScope();
-        
-    return this;
+            .to(botType)
+            .inSingletonScope();
+
+        return this;
     }
 
-    public UseConsoleHost<TUser, TConversation>():Startup{
+    public UseConsoleHost<TUser, TConversation>(): Startup {
         this._container.bind<contracts.IHostService<TUser, TConversation>>(contracts.contractSymbols.IHostService)
-        .to(consoleHostService);
+            .to(consoleHostService);
         return this;
     }
 
@@ -69,50 +74,65 @@ export default class Startup {
      * @returns {Startup} 
      * @memberof Startup
      */
-    public UseStateStore<StorageType>(storeType: new()=> IStorage): Startup {
+    public UseStateStore<StorageType>(storeType: new () => IStorage): Startup {
         this._container.bind<IStorage>(contracts.contractSymbols.Storage)
             .to(storeType);
-            
+
         return this;
-    }   
+    }
 
     public UseState<TUser, TConversation>(): Startup {
-        
+
         this._container.bind<contracts.IStateService<TUser, TConversation>>(contracts.contractSymbols.IStateService)
             .to(stateService)
             .inSingletonScope();
-            
+
 
         return this;
     }
-   
 
-    public BindType<TInterface>(classType: new()=> TInterface, symbol:symbol, singleton:boolean = false){
+
+    public BindType<TInterface>(classType: new () => TInterface, 
+            symbol: symbol, singleton: boolean = false) : Startup {
         var bind = this._container.bind<TInterface>(symbol)
             .to(classType)
-            
-        if(singleton){
+
+        if (singleton) {
             bind.inSingletonScope();
         }
+
+        return this;
     }
 
-    public BindInstance<TInterface>(classType: TInterface, symbol:symbol, singleton:boolean = false){
+    public BindInstance<TInterface>(classType: TInterface, symbol: symbol, 
+            singleton: boolean = false) : Startup {
         var bind = this._container.bind<TInterface>(symbol)
             .toConstantValue(classType);
+        return this;
     }
 
-    public Resolve<T>(symbol:symbol){
+    public BindNamed<TType>(classType: new () => TType, group: string, name: string): Startup {
+        this._container.bind<TType>(group)
+            .to(classType).whenTargetNamed(name);
+        return this;
+    }
+
+    public Resolve<T>(symbol: symbol, group?:string, name?:string) {
         return this._container.get<T>(symbol);
-    }
+    } 
+    
+    public ResolveByName<T>(group?:string, name?:string) {
+        return this._container.getNamed(group, name);
+    } 
 
-   
+
 
     private _setupSystemServices() {
         this._container.bind<contracts.IConfig>(contracts.contractSymbols.IConfig)
             .toConstantValue(this._prepConfig());
 
         this._container.bind<contracts.ILogService>(contracts.contractSymbols.ILogService)
-            .to(logService).inSingletonScope();      
+            .to(logService).inSingletonScope();
     }
 
     private _prepConfig(): contracts.IConfig {
@@ -136,7 +156,7 @@ export default class Startup {
      * Property to access the IOC container
      * @returns Container
      */
-    public get container():Container{
+    public get container(): Container {
         return this._container;
     }
 }

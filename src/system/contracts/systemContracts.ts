@@ -9,6 +9,11 @@ let contractSymbols = {
     IStateService:Symbol("IStateService")
 }
 
+export interface ITopic{
+    begin(context: TurnContext): Promise<any>, 
+    routeReply(context: TurnContext): Promise<any>
+}
+
 export interface IStateService<TUserState, TConversationState>{
     getUserState(context: TurnContext): TUserState,
     getConversationState(context: TurnContext): TConversationState, 

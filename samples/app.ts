@@ -4,28 +4,20 @@ import MemoryStorageEx from "../src/system/services/extensios/MemoryStorageEx";
 import * as contracts from "../src/system/contracts/systemContracts";
 
 import AlarmBot, { AlarmUser, AlarmConversation } from "./alamBot";
-
-
+import addAlarm from "./topics/addAlarm";
 
 class app{
     protected _startup:Startup;
 
     constructor() {
-        this._startup = new Startup();       
-
-        this._startup
+        this._startup = new Startup()
         .UseState<AlarmUser, AlarmConversation>()        
-        .UseStateStore<MemoryStorageEx>(MemoryStorageEx)
+        .UseStateStore<MemoryStorageEx>(MemoryStorageEx)        
+        .UseConsoleHost()
+        .BindNamed(addAlarm, "topics", "addAlarm")
         .UseBot(AlarmBot)
-        .UseConsoleHost();
-
-        // var res = this._startup.Resolve<Storage>(contracts.contractSymbols.Storage);
-        // var res2 = this._startup
-        //     .Resolve<contracts.IStateService<AlarmUser, AlarmConversation>>(contracts.contractSymbols.IStateService);
-        var bot = this._startup.botService;        
-        bot.boot();
+        .Boot();       
     }
-
 }
 
 var a = new app();
