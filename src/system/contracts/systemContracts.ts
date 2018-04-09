@@ -5,8 +5,8 @@ let contractSymbols = {
     IBotService: Symbol("IBotService"), 
     IHostService: Symbol("IHostService"), 
     Storage: Symbol("Storage"),
-    ConversationStateObject: Symbol("ConversationStateObject"),
-    UserStateObject: Symbol("UserStateObject")
+    ConversationState: Symbol("ConversationState"),
+    UserState: Symbol("UserState")
 }
 
 export interface IConfig{

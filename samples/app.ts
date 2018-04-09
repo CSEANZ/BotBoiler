@@ -1,0 +1,1 @@
+import startup from '../src'
