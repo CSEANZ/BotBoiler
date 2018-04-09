@@ -1,7 +1,7 @@
-import { botStateBase } from "../../src/system/services/botStateBase";
+import { botStateBase } from "../../../src/system/services/botStateBase";
 import { AlarmUser, AlarmConversation, Alarm } from "../alamBot";
 import { TurnContext } from "botbuilder";
-import { ITopic } from "../../src/system/contracts/systemContracts";
+import { ITopic } from "../../../src/system/contracts/systemContracts";
 
 
 export default class addAlarm extends botStateBase<AlarmUser, AlarmConversation> implements ITopic{

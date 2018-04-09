@@ -8,9 +8,9 @@
     "build": "tsc",
     "prewatch": "typings install",
     "watch": "tsc -w --project ./src/tsconfig.json",
-    "run": "nodemon ./output/run/app.js --delay .5",
-    "watchsample": "tsc -w --project ./samples/tsconfig.json",
-    "runsample": "nodemon ./output/samples/samples/app.js --delay .5",
+    "run": "nodemon ./lib/app.js --delay .5",
+    "watchsample": "tsc -w --project ./samples/dialogs-ts/tsconfig.json",
+    "runsample": "nodemon ./output/samples/samples/dialogs-ts/app.js --delay .5",
     "test": "tsc --project ./tests/tsconfig.json && ava ./output/test/tests/run/**/*.js",
     "avabuild": "tsc -w --project ./tests/tsconfig.json",
     "avarun": "ava -w ./output/test/tests/run/**/*.js"
@@ -56,6 +56,7 @@
     "reflect-metadata": "^0.1.10",
     "restify": "^4.3.2",
     "sinon": "^2.4.1",
-    "botbuilder": "^4.0.0-m3.0"
+    "botbuilder": "^4.0.0-m3.0",
+    "botbuilder-dialogs": "^4.0.0-m3.0"
   }
 }

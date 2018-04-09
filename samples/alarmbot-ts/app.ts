@@ -1,7 +1,7 @@
-import Startup from "../src/system/Startup";
-import MemoryStorageEx from "../src/system/services/extensios/MemoryStorageEx";
+import Startup from "../../src/system/Startup";
+import MemoryStorageEx from "../../src/system/services/extensios/MemoryStorageEx";
 
-import * as contracts from "../src/system/contracts/systemContracts";
+import * as contracts from "../../src/system/contracts/systemContracts";
 
 import AlarmBot, { AlarmUser, AlarmConversation, alarmBotSymbols } from "./alamBot";
 import addAlarm from "./topics/addAlarm";

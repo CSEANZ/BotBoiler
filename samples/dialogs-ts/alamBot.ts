@@ -1,10 +1,8 @@
-import { serviceBase } from "../src/system/services/serviceBase";
-import * as contracts from "../src/system/contracts/systemContracts";
+import { serviceBase } from "../../src/system/services/serviceBase";
+import * as contracts from "../../src/system/contracts/systemContracts";
 import { inject, injectable, named } from "inversify";
 import { TurnContext } from "botbuilder";
-import { botService } from "../src/system/services/botService";
-import cancel from "./topics/cancel";
-import showAlarms from "./topics/showAlarms";
+import { botService } from "../../src/system/services/botService";
 
 let alarmBotSymbols = {
     topics: "topics"
@@ -34,6 +32,15 @@ export interface AlarmUser {
 }
 
 
+function someDecorator(target, key, descriptor){
+    var oldValue = descriptor.value;
+
+    descriptor.value = function(thing){
+        console.log("Ran this first: " + thing);
+        oldValue(thing);
+    }
+}
+
 @injectable()
 export default class AlarmBot extends botService<AlarmUser, AlarmConversation> {
 
@@ -43,18 +50,15 @@ export default class AlarmBot extends botService<AlarmUser, AlarmConversation> {
     private _deleteAlarms: contracts.ITopic;
 
     constructor(
-        @inject("topics") @named("addAlarm") addAlarm: contracts.ITopic,
-        @inject("topics") @named("deleteAlarms") deleteAlarms: contracts.ITopic,
-        @inject(showAlarms) showAlarms: contracts.ITopic,
-        @inject(cancel) cancel: contracts.ITopic,
-
+        
     ) {
         super();
+        this.desc("passed in value");
+    }
 
-        this._addAlarm = addAlarm;
-        this._cancel = cancel;
-        this._showAlarms = showAlarms;
-        this._deleteAlarms = deleteAlarms;
+    @someDecorator
+    public desc(value:string){
+        console.log("This is in the regular function: " + value);
     }
 
     public boot() {

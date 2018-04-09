@@ -1,5 +1,9 @@
 import { TurnContext, BotStateSet } from "botbuilder";
 
+import { 
+    DialogContext 
+} from 'botbuilder-dialogs';
+
 let contractSymbols = {
     ILogService: Symbol("ILogService"),    
     IConfig: Symbol("IConfig"),
@@ -7,6 +11,17 @@ let contractSymbols = {
     IHostService: Symbol("IHostService"), 
     Storage: Symbol("Storage"),
     IStateService:Symbol("IStateService")
+}
+
+export interface IDialogWaterfallStep{
+    (dc: DialogContext<TurnContext>, args?:any)
+}
+
+export interface IDialog {
+    id: string;    
+    trigger: string | RegExp;
+    waterfall: IDialogWaterfallStep[];
+    init?:() => void;
 }
 
 export interface ITopic{

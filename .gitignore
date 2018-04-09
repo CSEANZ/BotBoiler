@@ -61,3 +61,5 @@ output_test
 output/
 package-lock.json
 *.PublishSettings
+
+/output/samples/**/*
