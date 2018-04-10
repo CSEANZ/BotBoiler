@@ -37,9 +37,13 @@ export default class stateService<TUserState, TConversationState>
         return this._userState.get(context);
     }
 
+    public gu = this.getUserState;
+
     public getConversationState(context: TurnContext): TConversationState{        
         return this._conversationState.get(context);
     }
+
+    public gc = this.getConversationState;
 
 
 }

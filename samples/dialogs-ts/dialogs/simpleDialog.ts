@@ -9,7 +9,7 @@ export default class simpleDialog implements contracts.IDialog{
     public trigger: string = "trigger dialog";
     
     public get waterfall(): contracts.IDialogWaterfallStep[]{
-        return [this.step1.bind(this), this.step2];
+        return [this.step1.bind(this), this.step2.bind(this)];
     }
 
     public step1(dc:DialogContext<TurnContext>){
