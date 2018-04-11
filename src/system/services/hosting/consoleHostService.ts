@@ -21,7 +21,7 @@ export class consoleHostService<TUserState, TConversationState> implements IHost
             this._stateService = stateService;       
     }
 
-    init(callback:(context: TurnContext) => void){
+    init(callbacks:{ (context: TurnContext): void; } []){
        
         var adapter = new ConsoleAdapter();
         
@@ -31,7 +31,9 @@ export class consoleHostService<TUserState, TConversationState> implements IHost
 
         // Listen for incoming requests 
         adapter.listen(async (context) => {            
-            callback(context);
+            for(var i in callbacks){
+                callbacks[i](context);
+            }            
         });
     }
 

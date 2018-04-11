@@ -8,7 +8,7 @@
 			"taskName": "build:dev:fast",
 			"command": "tsc",
 			"isShellCommand": true,
-			"args": ["-p", "./samples"],
+			"args": ["-p", "./samples/dialogs-ts"],
 			"showOutput": "silent",			
 			"problemMatcher": "$tsc",
 			"isBuildCommand": true

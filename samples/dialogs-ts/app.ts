@@ -1,23 +1,25 @@
-import Startup from "../../src/system/Startup";
-import MemoryStorageEx from "../../src/system/services/extensios/MemoryStorageEx";
+import * as BotBoiler from '../../src/botboiler';
 
-import * as contracts from "../../src/system/contracts/systemContracts";
+import alarmBot, {AlarmUser, AlarmConversation, alarmBotSymbols } from "./alarmBot";
+import titlePromptDialog from "./dialogs/titlePromptDialog";
 
-import AlarmBot, { AlarmUser, AlarmConversation, alarmBotSymbols } from "./alamBot";
+import * as dialogs from './dialogs/dialogIndex';
 
 class app{
-    protected _startup:Startup;    
+    protected _startup:BotBoiler.Startup;    
 
     constructor() {
-        this._startup = new Startup()
+  
+        this._startup = new BotBoiler.Startup()
         .UseState<AlarmUser, AlarmConversation>()        
-        .UseStateStore<MemoryStorageEx>(MemoryStorageEx)        
+        .UseStateStore<BotBoiler.MemoryStorageEx>(BotBoiler.MemoryStorageEx)        
         .UseConsoleHost()
-        // .BindNamed(addAlarm, alarmBotSymbols.topics, "addAlarm")
+        .UseDialogs(dialogs)
+        .BindNamed(titlePromptDialog, alarmBotSymbols.topics, "titlePrompt")
         // .Bind(cancel)
         // .BindNamed(deleteAlarm, alarmBotSymbols.topics, "deleteAlarms")
         // .Bind(showAlarms)
-         .UseBot(AlarmBot)
+         .UseBot(alarmBot)
         .Boot();       
     }
 }

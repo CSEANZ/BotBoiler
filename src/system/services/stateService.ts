@@ -10,7 +10,7 @@ import * as contracts from "../contracts/systemContracts";
 import { IStorage } from "./extensios/MemoryStorageEx";
 
 @injectable()
-export default class stateService<TUserState, TConversationState> 
+export default class StateService<TUserState, TConversationState> 
     implements contracts.IStateService<TUserState,TConversationState> {
 
     private _storage: IStorage;

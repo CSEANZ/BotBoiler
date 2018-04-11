@@ -9,7 +9,7 @@ import * as contracts from "./contracts/systemContracts";
 import { configBase } from "./services/serviceBase";
 import { serverHelper } from "./helpers/serverHelper";
 import { logService } from "./services/logService";
-import { botService } from "./services/botService";
+import BotService from "./services/botService";
 
 
 import { consoleHostService } from "./services/hosting/consoleHostService";
@@ -28,7 +28,7 @@ export default class Startup {
         this._container = new Container();
         configBase.Container = this._container;
         this._setupSystemServices();
-
+        this._registerDialogFactory();
     }
 
     public Boot(): Startup {
@@ -51,7 +51,7 @@ export default class Startup {
         return this;
     }
 
-    public UseBot(botType: new () => contracts.IBotService) {
+    public UseBot(botType: new ()=> contracts.IBotService) {
         this._container.bind<contracts.IBotService>(contracts.contractSymbols.IBotService)
             .to(botType)
             .inSingletonScope();
@@ -91,6 +91,21 @@ export default class Startup {
         return this;
     }
 
+    public UseDialogs(dialogs: {}): Startup{
+        
+        for (var i in dialogs) {
+
+            var dialog = dialogs[i];
+          
+            if (typeof dialog == "function") {
+                this._container.bind<contracts.IDialog>("dialog")
+                    .to(dialog).inSingletonScope().whenTargetNamed(i);
+            }
+        }   
+
+        return this;
+    }
+
     public Bind<TType>(classType: new () => TType) : Startup{
         this._container.bind<TType>(classType).to(classType);
         return this;
@@ -115,6 +130,12 @@ export default class Startup {
         return this;
     }
 
+    public BindDialog<TType>(classType: new () => TType, group: string, name: string): Startup {
+        this._container.bind<TType>(group)
+            .to(classType).whenTargetNamed(name);
+        return this;
+    }
+
     public BindNamed<TType>(classType: new () => TType, group: string, name: string): Startup {
         this._container.bind<TType>(group)
             .to(classType).whenTargetNamed(name);
@@ -129,7 +150,14 @@ export default class Startup {
         return this._container.getNamed(group, name);
     } 
 
-
+    private _registerDialogFactory(){
+        this._container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
+            .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
+                return () => {
+                    return context.container.getAll<contracts.IDialog>("dialog");                
+                };
+        });   
+    }
 
     private _setupSystemServices() {
         this._container.bind<contracts.IConfig>(contracts.contractSymbols.IConfig)

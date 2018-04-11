@@ -1,20 +1,26 @@
-import * as contracts from "../../../src/system/contracts/systemContracts";
-import { 
-    DialogContext, TextPrompt, Prompt 
-} from 'botbuilder-dialogs';
-import { TurnContext } from "botbuilder";
+import * as BotBoiler from '../../../src/botboiler';
+import { TextPrompt } from 'botbuilder-dialogs';
+import { TurnContext } from 'botbuilder';
 
-export default class  implements contracts.IDialog{
-    public id: string = "simpleDialog";
-    public trigger: string = "trigger dialog";
+
+@BotBoiler.injectable()
+export default class implements BotBoiler.Contracts.IDialog{
     
-    public get waterfall(): Prompt<TurnContext>[]{
-        return [new TextPrompt(this.prompt.bind(this))];
+    public id: string = "titlePrompt";
+    public trigger: string = "";
+    
+    public get dialog(): BotBoiler.Contracts.IBotDialog {       
+        var d = new TextPrompt(this.prompt);
+        return d;
     }
-
-    public async prompt(dc:DialogContext<TurnContext>, value:any){
+   
+    public async prompt(
+            context:TurnContext, 
+            value:any):Promise<any>{
+                
+                
         if (!value || value.length < 3) {
-            await dc.context.sendActivity(`Title should be at least 3 characters long.`);
+            await context.sendActivity(`Title should be at least 3 characters long.`);
             return undefined;
         } else {
             return value.trim();

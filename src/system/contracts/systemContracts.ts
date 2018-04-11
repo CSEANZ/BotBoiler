@@ -1,56 +1,69 @@
 import { TurnContext, BotStateSet } from "botbuilder";
 
-import { 
-    DialogContext, Prompt
+import {
+    DialogContext, Prompt, SkipStepFunction, WaterfallStep, Dialog, PromptValidator
 } from 'botbuilder-dialogs';
 
 let contractSymbols = {
-    ILogService: Symbol("ILogService"),    
+    ILogService: Symbol("ILogService"),
     IConfig: Symbol("IConfig"),
-    IBotService: Symbol("IBotService"), 
-    IHostService: Symbol("IHostService"), 
+    IBotService: Symbol("IBotService"),
+    IHostService: Symbol("IHostService"),
     Storage: Symbol("Storage"),
-    IStateService:Symbol("IStateService")
+    IStateService: Symbol("IStateService")
 }
 
-export interface IDialogWaterfallStep{
-    (dc: DialogContext<TurnContext>, args?:any)
+export interface DialogContext extends DialogContext<TurnContext> {
+
+}
+
+export interface IDialogWaterfallStep extends WaterfallStep<TurnContext>{
+    
+}
+
+export interface IPromptValidator<R, O = R> extends PromptValidator<R, O>{
+
+}
+
+export interface IBotDialog extends Dialog<TurnContext>{
+
 }
 
 export interface IDialog {
-    id: string;    
-    trigger: string | RegExp;
-    waterfall: IDialogWaterfallStep[] | Prompt[];    
-    init?:() => void;
+    id: string;
+    trigger?: string | RegExp;
+    waterfall?: IDialogWaterfallStep[];
+    dialog?: IBotDialog
+    init?: () => void;
 }
 
-export interface ITopic{
-    begin(context: TurnContext): Promise<any>, 
+export interface ITopic {
+    begin(context: TurnContext): Promise<any>,
     routeReply(context: TurnContext): Promise<any>
 }
 
-export interface IStateService<TUserState, TConversationState>{
+export interface IStateService<TUserState, TConversationState> {
     getUserState(context: TurnContext): TUserState,
-    getConversationState(context: TurnContext): TConversationState, 
-    getBotStateSet() : BotStateSet
+    getConversationState(context: TurnContext): TConversationState,
+    getBotStateSet(): BotStateSet
 }
 
-export interface IConfig{
+export interface IConfig {
     port: string,
     microsoftAppId?: string,
     microsoftAppPassword?: string,
     luisModelUrl?: string,
-    serverType?: serverTypes, 
-    qna_id?:string,
-    qna_subs?:string
+    serverType?: serverTypes,
+    qna_id?: string,
+    qna_subs?: string
 }
 
-export interface IHostService<TUserState, TConversationState>{
-    init(callback:(context: TurnContext) => void);    
-    log(message:string);
+export interface IHostService<TUserState, TConversationState> {
+    init(callbacks: { (context: TurnContext): void; }[]);
+    log(message: string);
 }
 
-export interface IBotService{
+export interface IBotService {
     boot();
 }
 
@@ -58,13 +71,13 @@ export enum serverTypes {
     AzureFunctions,
     AWSLambda,
     Local
-} 
+}
 
-export interface ILogService{
+export interface ILogService {
     log(logMessage: string);
-    setLogCallback(callback:(logMessage:string) => any);
+    setLogCallback(callback: (logMessage: string) => any);
 }
 
 
 
-export {contractSymbols};
+export { contractSymbols };

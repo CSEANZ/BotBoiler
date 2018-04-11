@@ -8,14 +8,14 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}/samples/app.ts",
+            "program": "${workspaceRoot}/samples/dialogs-ts/app.ts",
             "args": [
                 
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "build:dev:fast",
             "outFiles": [
-                "${workspaceRoot}/output/samples/samples/**/*.js"
+                "${workspaceRoot}/output/samples/samples/dialogs-ts/**/*.js"
             ],
             "sourceMaps": true
         },
