@@ -13,17 +13,18 @@ export default class addAlarm extends
     trigger:RegExp = /add alarm/gi;
 
     @BotBoiler.Decorators.Topic
-    public async begin(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
+    public async begin(context: BotBoiler.BotBuilder.TurnContext): Promise<boolean> {
         // Set topic and initialize empty alarm
         const conversation = this.stateService.getConversationState(context);
         conversation.topic = 'addAlarm';
         conversation.alarm = {};
         
         // Prompt for first field
-        await this.nextField(context);
+        return await this.nextField(context);
     }
-
-    public async routeReply(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
+    
+    @BotBoiler.Decorators.Topic
+    public async routeReply(context: BotBoiler.BotBuilder.TurnContext): Promise<boolean> {
         // Handle users reply to prompt
         
         const conversation = this.stateService.getConversationState(context);
@@ -44,10 +45,10 @@ export default class addAlarm extends
         }
     
         // Prompt for next field
-        await this.nextField(context);
+        return await this.nextField(context);
     }
 
-    async nextField(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
+    async nextField(context: BotBoiler.BotBuilder.TurnContext): Promise<boolean> {
         // Prompt user for next missing field
         const conversation = this.stateService.getConversationState(context);
         const alarm = conversation.alarm;
@@ -70,7 +71,10 @@ export default class addAlarm extends
             conversation.alarm = undefined;
             conversation.prompt = undefined;
             await context.sendActivity(`Your alarm named "${alarm.title}" is set for "${alarm.time}".`);
+            return false;
         }
+
+        return true;
     }
 
 }

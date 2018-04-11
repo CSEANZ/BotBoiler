@@ -4,8 +4,9 @@ import Startup from "./system/Startup";
 import MemoryStorageEx from "./system/services/extensios/MemoryStorageEx";
 import * as Decorators  from "./system/helpers/decorators";
 import BotService from "./system/services/botService";
-import StateService from "./system/services/stateService";
+import StateService, {StateHost} from "./system/services/stateService";
 import BotStateBase from "./system/services/BotStateBase";
+
 
 import { injectable, inject, named } from "inversify";
 
@@ -20,6 +21,7 @@ export {
     BotStateBase,
     Decorators,
     StateService,
+    StateHost,
     injectable, 
     inject,
     named,

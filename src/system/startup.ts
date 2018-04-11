@@ -79,7 +79,7 @@ export default class Startup {
      */
     public UseStateStore<StorageType>(storeType: new () => IStorage): Startup {
         this._container.bind<IStorage>(contracts.contractSymbols.Storage)
-            .to(storeType);
+            .to(storeType).inSingletonScope();
 
         return this;
     }

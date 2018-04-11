@@ -51,7 +51,16 @@ export default class AlarmBot extends BotBoiler.BotService<AlarmUser, AlarmConve
     public async botCallback(context: BotBoiler.BotBuilder.TurnContext) {
         if (context.activity.type === 'message') {
             const utterance = (context.activity.text || '').trim().toLowerCase();
-            await this.runTopics(context, utterance);
+            
+            await context.sendActivity("Testing 123");
+            //var result = await this.runTopics(context, utterance);
+            var result = true;
+            var noRun = await this.noRun();
+            if(!result){
+                await context.sendActivity("Hi there, I'm Alarmy.");
+            }else{
+                await context.sendActivity("...");
+            }
         
         } else {
             await context.sendActivity(`[${context.activity.type} event detected]`);

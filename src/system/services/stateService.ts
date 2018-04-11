@@ -9,6 +9,11 @@ import * as contracts from "../contracts/systemContracts";
 
 import { IStorage } from "./extensios/MemoryStorageEx";
 
+export class StateHost{
+    public static BotStateSet:BotStateSet;
+    public static ConversationState:ConversationState; 
+}
+
 @injectable()
 export default class StateService<TUserState, TConversationState> 
     implements contracts.IStateService<TUserState,TConversationState> {
@@ -25,12 +30,15 @@ export default class StateService<TUserState, TConversationState>
         this._conversationState = new ConversationState<TConversationState>(this._storage.Storage);
         this._userState = new UserState<TUserState>(this._storage.Storage);
 
+        StateHost.ConversationState = this._conversationState;
         
     }
 
     public getBotStateSet() : BotStateSet{
         var stateSet = new BotStateSet();
         stateSet.use(this._conversationState, this._userState);
+        StateHost.BotStateSet = stateSet;
+    
         return stateSet;
     }    
 
