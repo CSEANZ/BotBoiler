@@ -32,7 +32,7 @@ export class consoleHostService<TUserState, TConversationState> implements IHost
         // Listen for incoming requests 
         adapter.listen(async (context) => {            
             for(var i in callbacks){
-                callbacks[i](context);
+                await callbacks[i](context);
             }            
         });
     }

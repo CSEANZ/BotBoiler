@@ -66,43 +66,37 @@ export default abstract class BotService<TUserState, TConversationState>
             console.log(topic.id);
         }
     }
-
-    protected async noRun(){
-
-    }
+    
     protected async runTopics(context: TurnContext, intent: string){
-        var convState: any = null;//this.stateService.getConversationState(context);        
-        console.log(convState);
-
-        return true;
-    }
-    //     for(var t in this._topics){
+        var convState: any = this.stateService.getConversationState(context);        
+    
+        for(var t in this._topics){
            
-    //         var topic:contracts.ITopic = this._topics[t];
+            var topic:contracts.ITopic = this._topics[t];
 
-    //         var trigger = topic.trigger;            
+            var trigger = topic.trigger;  
 
-    //         if(convState._botboiler && convState._botboiler.topic === topic.id){                
-    //             await topic.routeReply(context);
-    //             return true;
-    //         }
+            if(convState._botboiler && convState._botboiler.topic === topic.id){                
+                await topic.routeReply(context);
+                return true;
+            }
 
-    //         if (trigger) {    
-    //             if (trigger instanceof RegExp) {
-    //                 if (trigger.test(intent)) { 
+            if (trigger) {    
+                if (trigger instanceof RegExp) {
+                    if (trigger.test(intent)) { 
                                                
-    //                     await topic.begin(context);
-    //                     return true;
-    //                 }
-    //             } else {
-    //                 if (trigger == intent) {                        
-    //                     await topic.begin(context);
-    //                     return true;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+                        await topic.begin(context);
+                        return true;
+                    }
+                } else {
+                    if (trigger == intent) {                        
+                        await topic.begin(context);
+                        return true;
+                    }
+                }
+            }
+        }
+    }
 
     
     private _enableTopic(context: TurnContext, topicId:string){

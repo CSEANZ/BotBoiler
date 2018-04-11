@@ -53,9 +53,8 @@ export default class AlarmBot extends BotBoiler.BotService<AlarmUser, AlarmConve
             const utterance = (context.activity.text || '').trim().toLowerCase();
             
             await context.sendActivity("Testing 123");
-            //var result = await this.runTopics(context, utterance);
-            var result = true;
-            var noRun = await this.noRun();
+            var result = await this.runTopics(context, utterance);
+            
             if(!result){
                 await context.sendActivity("Hi there, I'm Alarmy.");
             }else{
