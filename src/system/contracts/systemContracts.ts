@@ -37,7 +37,9 @@ export interface IDialog {
     init?: () => void;
 }
 
-export interface ITopic {
+export interface ITopic {    
+    id: string;
+    trigger?: string | RegExp;
     begin(context: TurnContext): Promise<any>,
     routeReply(context: TurnContext): Promise<any>
 }

@@ -8,14 +8,14 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}/samples/dialogs-ts/app.ts",
+            "program": "${workspaceRoot}/samples/alarmbot-ts/app.ts",
             "args": [
                 
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "build:dev:fast",
             "outFiles": [
-                "${workspaceRoot}/output/samples/samples/dialogs-ts/**/*.js"
+                "${workspaceRoot}/output/samples/samples/alarmbot-ts/**/*.js"
             ],
             "sourceMaps": true
         },

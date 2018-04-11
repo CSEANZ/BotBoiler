@@ -1,19 +1,12 @@
-import * as BotBoiler from '../../../src/botboiler';
-import { AlarmUser, AlarmConversation, Alarm } from "../alarmBot";
+import { botStateBase } from "../../../src/system/services/botStateBase";
+import { AlarmUser, AlarmConversation, Alarm } from "../alamBot";
+import { TurnContext } from "botbuilder";
+import { ITopic } from "../../../src/system/contracts/systemContracts";
 
 
+export default class addAlarm extends botStateBase<AlarmUser, AlarmConversation> implements ITopic{
 
-
-
-export default class addAlarm extends 
-    BotBoiler.BotStateBase<AlarmUser, AlarmConversation> 
-    implements BotBoiler.Contracts.ITopic{
-
-    id: string = 'addAlarm';
-    trigger:RegExp = /add alarm/gi;
-
-    @BotBoiler.Decorators.Topic
-    public async begin(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
+    public async begin(context: TurnContext): Promise<any> {
         // Set topic and initialize empty alarm
         const conversation = this.stateService.getConversationState(context);
         conversation.topic = 'addAlarm';
@@ -23,9 +16,8 @@ export default class addAlarm extends
         await this.nextField(context);
     }
 
-    public async routeReply(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
+    public async routeReply(context: TurnContext): Promise<any> {
         // Handle users reply to prompt
-        
         const conversation = this.stateService.getConversationState(context);
         const utterance = context.activity.text.trim();
         switch (conversation.prompt) {
@@ -47,7 +39,7 @@ export default class addAlarm extends
         await this.nextField(context);
     }
 
-    async nextField(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
+    async nextField(context: TurnContext): Promise<any> {
         // Prompt user for next missing field
         const conversation = this.stateService.getConversationState(context);
         const alarm = conversation.alarm;

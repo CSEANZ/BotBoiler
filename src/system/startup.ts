@@ -21,11 +21,14 @@ export default class Startup {
     public _container: Container;
     private _config: contracts.IConfig;
 
+    public static Container:Container;
+
     /**
      *
      */
     constructor() {
         this._container = new Container();
+        Startup.Container = this._container;
         configBase.Container = this._container;
         this._setupSystemServices();
         this._registerDialogFactory();
@@ -51,7 +54,7 @@ export default class Startup {
         return this;
     }
 
-    public UseBot(botType: new ()=> contracts.IBotService) {
+    public UseBot(botType: new (...param:any[])=> contracts.IBotService) {
         this._container.bind<contracts.IBotService>(contracts.contractSymbols.IBotService)
             .to(botType)
             .inSingletonScope();
@@ -91,22 +94,49 @@ export default class Startup {
         return this;
     }
 
-    public UseDialogs(dialogs: {}): Startup{
-        
-        for (var i in dialogs) {
+    public UseDialogs(dialogs: {}): Startup{        
+        this.BindAll<contracts.IDialog>("IDialog", true, false, dialogs);
+        return this;
+    }
 
-            var dialog = dialogs[i];
+    public UseTopics(topics: {}): Startup{        
+        this.BindAll<contracts.ITopic>("ITopic", true, false, topics);
+        return this;
+    }
+
+    public BindAll<T>(identifier: string, singleton:boolean, addFactory:boolean = false, items: {}): Startup{
+        
+        for (var i in items) {
+
+            var dialog = items[i];
           
             if (typeof dialog == "function") {
-                this._container.bind<contracts.IDialog>("dialog")
-                    .to(dialog).inSingletonScope().whenTargetNamed(i);
+                
+                var binder = this._container.bind<T>(identifier).to(dialog);
+                
+                if(singleton){
+                    binder.inRequestScope();
+                }
+
+                binder.whenTargetNamed(i);
             }
         }   
+        if(addFactory){
+            this._container.bind<interfaces.Factory<contracts.IDialog>>(`Factory<${identifier}>`)
+            .toFactory<T[]>((context: interfaces.Context) => {
+                return () => {
+                    if(context.container.isBound(identifier)){
+                        return context.container.getAll<T>(identifier);  
+                    }                                  
+                };
+        });  
+        }
+       
 
         return this;
     }
 
-    public Bind<TType>(classType: new () => TType) : Startup{
+    public Bind<TType>(classType: new (...params:any[]) => TType) : Startup{
         this._container.bind<TType>(classType).to(classType);
         return this;
     }
@@ -136,7 +166,7 @@ export default class Startup {
         return this;
     }
 
-    public BindNamed<TType>(classType: new () => TType, group: string, name: string): Startup {
+    public BindNamed<TType>(classType: new (...param:any[]) => TType, group: string, name: string): Startup {
         this._container.bind<TType>(group)
             .to(classType).whenTargetNamed(name);
         return this;
@@ -154,10 +184,23 @@ export default class Startup {
         this._container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
             .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
                 return () => {
-                    return context.container.getAll<contracts.IDialog>("dialog");                
+                    if(context.container.isBound("IDialog")){
+                        return context.container.getAll<contracts.IDialog>("IDialog");           
+                    }                         
+                };
+        });
+        
+        this._container.bind<interfaces.Factory<contracts.IDialog>>("Factory<ITopic>")
+            .toFactory<contracts.ITopic[]>((context: interfaces.Context) => {
+                return () => {
+                    if(context.container.isBound("ITopic")){
+                        return context.container.getAll<contracts.ITopic>("ITopic");           
+                    }                         
                 };
         });   
     }
+
+    
 
     private _setupSystemServices() {
         this._container.bind<contracts.IConfig>(contracts.contractSymbols.IConfig)

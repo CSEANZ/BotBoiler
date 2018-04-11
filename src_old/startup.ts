@@ -67,19 +67,7 @@ export default class startup {
         return this._container.get<contracts.IBotService>(contracts.contractSymbols.IBotService);
     }
 
-    /**
-     * Creates the dialog factory that can be used later to inject all registered dialogs in to a class
-     * Example of this is on the botService class where dialogs() are injected. 
-     */
-    private _registerDialogFactory(){
-        this._container.bind<interfaces.Factory<contracts.IDialog>>("Factory<IDialog>")
-            .toFactory<contracts.IDialog[]>((context: interfaces.Context) => {
-                return () => {
-                    return context.container.getAll<contracts.IDialog>("dialog");                
-                };
-        });        
-    }
-
+    
     /**
      * Dynamically register any dialogs that are exposed from dialogIndex on the container
      */

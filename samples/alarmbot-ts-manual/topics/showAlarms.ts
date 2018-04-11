@@ -1,15 +1,13 @@
-import * as BotBoiler from '../../../src/botboiler';
-import { AlarmUser, AlarmConversation, Alarm } from "../alarmBot";
+import { botStateBase } from "../../../src/system/services/botStateBase";
+import { AlarmUser, AlarmConversation, Alarm } from "../alamBot";
+import { TurnContext } from "botbuilder";
+import { ITopic } from "../../../src/system/contracts/systemContracts";
+import { injectable } from "inversify";
 
+@injectable()
+export default class showAlarms extends botStateBase<AlarmUser, AlarmConversation> implements ITopic {
 
-@BotBoiler.injectable()
-export default class showAlarms
-    extends BotBoiler.BotStateBase<AlarmUser, AlarmConversation>
-    implements BotBoiler.Contracts.ITopic {
-
-    id: string = 'showAlarms';
-
-    public async begin(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
+    public async begin(context: TurnContext): Promise<any> {
         // Delete any existing topic
         this.stateService.getConversationState(context).topic = undefined;
 
@@ -18,7 +16,7 @@ export default class showAlarms
         await this.renderAlarms(context);
     }
 
-    public async renderAlarms(context: BotBoiler.BotBuilder.TurnContext): Promise<number> {
+    public async renderAlarms(context: TurnContext): Promise<number> {
         // Get user state w/alarm list
         const user = this.stateService.getUserState(context);
 
@@ -37,7 +35,7 @@ export default class showAlarms
         await context.sendActivity(msg);
         return user.alarms.length;
     }
-    public async routeReply(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
+    public async routeReply(context: TurnContext): Promise<any> {
 
     }
 

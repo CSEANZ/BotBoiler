@@ -1,12 +1,15 @@
-import { botStateBase } from "../../../src/system/services/botStateBase";
-import { AlarmUser, AlarmConversation, Alarm } from "../alamBot";
-import { TurnContext } from "botbuilder";
-import { ITopic } from "../../../src/system/contracts/systemContracts";
+import * as BotBoiler from '../../../src/botboiler';
+import { AlarmUser, AlarmConversation, Alarm } from "../alarmBot";
 
 
-export default class cancel extends botStateBase<AlarmUser, AlarmConversation> implements ITopic{
 
-    public async begin(context: TurnContext): Promise<any> {
+export default class cancel
+    extends BotBoiler.BotStateBase<AlarmUser, AlarmConversation>
+    implements BotBoiler.Contracts.ITopic {
+
+    id: string = 'cancel';
+
+    public async begin(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
         const conversation = this.stateService.getConversationState(context);
         if (conversation.topic) {
             conversation.topic = undefined;
@@ -16,7 +19,7 @@ export default class cancel extends botStateBase<AlarmUser, AlarmConversation> i
         }
     }
 
-    public async routeReply(context: TurnContext): Promise<any> {
-       
+    public async routeReply(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
+
     }
 }

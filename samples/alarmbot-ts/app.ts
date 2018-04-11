@@ -1,29 +1,20 @@
-import Startup from "../../src/system/Startup";
-import MemoryStorageEx from "../../src/system/services/extensios/MemoryStorageEx";
+import * as BotBoiler from '../../src/botboiler';
 
-import * as contracts from "../../src/system/contracts/systemContracts";
+import AlarmBot, { AlarmUser, AlarmConversation, alarmBotSymbols } from "./alarmBot";
 
-import AlarmBot, { AlarmUser, AlarmConversation, alarmBotSymbols } from "./alamBot";
-import addAlarm from "./topics/addAlarm";
-import cancel from "./topics/cancel";
-import deleteAlarm from "./topics/deleteAlarm";
-import showAlarms from "./topics/showAlarms";
+import * as topics from './topics/topics';
 
 class app{
-    protected _startup:Startup;
-
-    
+    protected _startup:BotBoiler.Startup;    
 
     constructor() {
-        this._startup = new Startup()
+        this._startup = new BotBoiler.Startup()
         .UseState<AlarmUser, AlarmConversation>()        
-        .UseStateStore<MemoryStorageEx>(MemoryStorageEx)        
+        .UseStateStore<BotBoiler.MemoryStorageEx>(BotBoiler.MemoryStorageEx)        
         .UseConsoleHost()
-        .BindNamed(addAlarm, alarmBotSymbols.topics, "addAlarm")
-        .Bind(cancel)
-        .BindNamed(deleteAlarm, alarmBotSymbols.topics, "deleteAlarms")
-        .Bind(showAlarms)
+        .UseTopics(topics)        
         .UseBot(AlarmBot)
+        .Bind(topics.showAlarms)
         .Boot();       
     }
 }

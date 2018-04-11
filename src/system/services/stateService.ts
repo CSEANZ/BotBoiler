@@ -16,7 +16,8 @@ export default class StateService<TUserState, TConversationState>
     private _storage: IStorage;
 
     private _conversationState: ConversationState<TConversationState>;
-    private _userState: UserState<TUserState>;
+    private _userState: UserState<TUserState>;   
+    
 
     constructor(@inject(contracts.contractSymbols.Storage) storage: IStorage) {
         

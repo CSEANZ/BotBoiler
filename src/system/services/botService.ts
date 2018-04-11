@@ -4,7 +4,7 @@ import * as contracts from "../contracts/systemContracts";
 import { serviceBase } from "./serviceBase";
 
 import { BotStateSet, BotFrameworkAdapter, TurnContext } from 'botbuilder';
-import { botStateBase } from './botStateBase';
+import BotStateBase from './botStateBase';
 import { DialogSet, DialogContext, SkipStepFunction, DatetimePrompt } from 'botbuilder-dialogs';
 import { DecoratorManager, DecoratorTypes, PromptTypes } from '../dialogs/decoratorManager';
 
@@ -17,7 +17,7 @@ import { DecoratorManager, DecoratorTypes, PromptTypes } from '../dialogs/decora
  */
 @injectable()
 export default abstract class BotService<TUserState, TConversationState>
-    extends botStateBase<TUserState, TConversationState>
+    extends BotStateBase<TUserState, TConversationState>
     implements contracts.IBotService {
 
     @inject(contracts.contractSymbols.IHostService)
@@ -29,8 +29,13 @@ export default abstract class BotService<TUserState, TConversationState>
     @inject("Factory<IDialog>")
     public dialogFactory: () => contracts.IDialog;
 
+    @inject("Factory<ITopic>")
+    public topicFactory: () => contracts.ITopic;
+
     private _dialogs: contracts.IDialog;
     private _dialogSet = new DialogSet();
+
+    private _topics: contracts.ITopic;
 
     /**
      *
@@ -44,12 +49,54 @@ export default abstract class BotService<TUserState, TConversationState>
 
     public boot() {
 
+        this.createTopics();
+
         this.createDialogs()
 
         this.hostService.init(
             [               
                 this.botCallback.bind(this)
             ]);
+    }
+
+    private createTopics(){
+        this._topics = this.topicFactory();
+        for(var d in this._topics){
+            var topic = this._topics[d];
+            console.log(topic.id);
+        }
+    }
+
+    protected async runTopics(context: TurnContext, intent: string): Promise<boolean>{
+        var convState: any = this.stateService.getConversationState(context);        
+        
+        for(var t in this._topics){
+           
+            var topic:contracts.ITopic = this._topics[t];
+
+            var trigger = topic.trigger;
+
+            console.log("Trigger: " + trigger);
+            if (trigger) {    
+                if (trigger instanceof RegExp) {
+                    if (trigger.test(intent)) {                        
+                        await topic.begin(context);
+                        return true;
+                    }
+                } else {
+                    if (trigger == intent) {                        
+                        await topic.begin(context);
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    
+    private _enableTopic(context: TurnContext, topicId:string){
+        var convState: any = this.stateService.getConversationState(context); 
+        
     }
 
     protected async runDialogs(context: TurnContext, intent: string): Promise<boolean> {

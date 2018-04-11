@@ -1,29 +1,25 @@
-import * as BotBoiler from '../../../src/botboiler';
-import { AlarmUser, AlarmConversation, Alarm } from "../alarmBot";
-
-
+import { botStateBase } from "../../../src/system/services/botStateBase";
+import { AlarmUser, AlarmConversation, Alarm } from "../alamBot";
+import { TurnContext } from "botbuilder";
+import { ITopic } from "../../../src/system/contracts/systemContracts";
 import showAlarms from "./showAlarms";
+import { inject } from "inversify";
 
 
+export default class deleteAlarm extends botStateBase<AlarmUser, AlarmConversation> implements ITopic {
 
-export default class deleteAlarm
-    extends BotBoiler.BotStateBase<AlarmUser, AlarmConversation>
-    implements BotBoiler.Contracts.ITopic {
-
-    id: string = 'deleteAlarm';
-
-    private _showAlarms: showAlarms;
+    private _showAlarms:showAlarms;
     /**
      *
      */
     constructor(
-        @BotBoiler.inject(showAlarms) showAlarms: showAlarms
+        @inject(showAlarms)showAlarms:showAlarms
     ) {
         super();
         this._showAlarms = showAlarms;
     }
 
-    public async begin(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
+    public async begin(context: TurnContext): Promise<any> {
         const conversation = this.stateService.getConversationState(context);
         conversation.topic = undefined;
 
@@ -36,7 +32,7 @@ export default class deleteAlarm
         }
     }
 
-    public async routeReply(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
+    public async routeReply(context: TurnContext): Promise<any> {
         // Validate users reply and delete alarm
         let deleted = false;
         const title = context.activity.text.trim();
