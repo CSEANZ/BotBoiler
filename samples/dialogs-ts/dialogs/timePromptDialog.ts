@@ -7,13 +7,9 @@ import { TurnContext } from 'botbuilder';
 export default class implements BotBoiler.Contracts.IDialog {
 
     public id: string = "timePrompt";
-    public trigger: string = "";
+    public trigger: string = "";   
 
-    public get dialog(): BotBoiler.Contracts.IBotDialog {       
-        var d = new DatetimePrompt(this.prompt);
-        return d;
-    }
-
+    @BotBoiler.Decorators.BoilerDatetimePrompt
     public async prompt(context:TurnContext,
         values: FoundDatetime[]) : Promise<Date>{
         try {

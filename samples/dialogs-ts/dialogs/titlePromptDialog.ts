@@ -4,20 +4,17 @@ import { TurnContext } from 'botbuilder';
 
 
 @BotBoiler.injectable()
+
+
 export default class implements BotBoiler.Contracts.IDialog{
     
     public id: string = "titlePrompt";
     public trigger: string = "";
-    
-    public get dialog(): BotBoiler.Contracts.IBotDialog {       
-        var d = new TextPrompt(this.prompt);
-        return d;
-    }
-   
+  
+    @BotBoiler.Decorators.BoilerTextPrompt
     public async prompt(
             context:TurnContext, 
-            value:any):Promise<any>{
-                
+            value:any):Promise<any>{                
                 
         if (!value || value.length < 3) {
             await context.sendActivity(`Title should be at least 3 characters long.`);

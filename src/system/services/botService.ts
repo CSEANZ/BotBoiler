@@ -159,11 +159,12 @@ export default abstract class BotService<TUserState, TConversationState>
         this._dialogs = this.dialogFactory();
 
         for (var i in this._dialogs) {
-            var dialog: any = this._dialogs[i];
-            
+            var dialog = this._dialogs[i];
+           
             if(dialog.waterfall){
                 this._dialogSet.add(dialog.id, dialog.waterfall);
-            }else if(dialog.dialog){               
+            }else if(dialog.dialog){  
+                var d = dialog.dialog;                 
                 this._dialogSet.add(dialog.id, dialog.dialog);
             }else{
                 console.log(`**** warning dialog: ${i} does not implement waterfall or dialog`);
