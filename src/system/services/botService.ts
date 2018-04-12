@@ -113,17 +113,17 @@ export default abstract class BotService<TUserState, TConversationState>
     
             if(dc.instance){
                 await dc.continue();
-                // if(context.responded)
-                // {
-                    
-                // }
-                return true;
+                if(context.responded)
+                {                    
+                    return true;
+                }
+                return false;                
             }
 
             for (var i in this._dialogs) {
                 var dialog: any = this._dialogs[i];
                 var trigger = dialog.trigger;
-                console.log("Cfg: " + dialog._boilerconfig);
+                
                 if (trigger) {
     
                     if (trigger instanceof RegExp) {
@@ -163,8 +163,7 @@ export default abstract class BotService<TUserState, TConversationState>
             
             if(dialog.waterfall){
                 this._dialogSet.add(dialog.id, dialog.waterfall);
-            }else if(dialog.dialog){
-                console.log(dialog.dialog);
+            }else if(dialog.dialog){               
                 this._dialogSet.add(dialog.id, dialog.dialog);
             }else{
                 console.log(`**** warning dialog: ${i} does not implement waterfall or dialog`);

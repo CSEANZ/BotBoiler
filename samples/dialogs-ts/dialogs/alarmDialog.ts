@@ -9,11 +9,11 @@ export default class alarmDialog
     extends BotBoiler.DialogBase<AlarmBot.AlarmUser, AlarmBot.AlarmConversation>{
     
     public id: string = "alarmDialog";   
-    public trigger: RegExp =  /jordan/gi;
+    public trigger: RegExp =  /add alarm/gi;
 
    
     public get waterfall(): BotBoiler.Contracts.IDialogWaterfallStep[]{
-        return [this.step1.bind(this), this.step2.bind(this)];
+        return [this.step1.bind(this), this.step2.bind(this), this.step3.bind(this)];
     }
     
     /**
@@ -26,7 +26,6 @@ export default class alarmDialog
         dc.instance.state = {} as AlarmBot.Alarm;
         await dc.prompt('titlePrompt', `What would you like to call your alarm?`);
     }
-
 
     /**
      * 
@@ -49,6 +48,9 @@ export default class alarmDialog
 
         // Alarm completed so set alarm.
         const user = this.stateService.getUserState(dc.context);
+        if(!user.alarms){
+            user.alarms = [];
+        }
         user.alarms.push(alarm);
         
         // Confirm to user

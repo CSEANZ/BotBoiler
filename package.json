@@ -9,8 +9,10 @@
     "prewatch": "typings install",
     "watch": "tsc -w --project ./src/tsconfig.json",
     "run": "nodemon ./lib/app.js --delay .5",
-    "watchsample": "tsc -w --project ./samples/alarmbot-ts/tsconfig.json",
-    "runsample": "nodemon ./output/samples/samples/alarmbot-ts/app.js --delay .5",
+    "watchalarmbotsample": "tsc -w --project ./samples/alarmbot-ts/tsconfig.json",
+    "runalarmbotsample": "nodemon ./output/samples/samples/alarmbot-ts/app.js --delay .5",
+    "watchdialogsample": "tsc -w --project ./samples/dialogs-ts/tsconfig.json",
+    "rundialogsample": "nodemon ./output/samples/samples/dialogs-ts/app.js --delay .5",
     "test": "tsc --project ./tests/tsconfig.json && ava ./output/test/tests/run/**/*.js",
     "avabuild": "tsc -w --project ./tests/tsconfig.json",
     "avarun": "ava -w ./output/test/tests/run/**/*.js"

@@ -28,15 +28,6 @@ export interface AlarmUser {
     count: number;
 }
 
-
-function someDecorator(target, key, descriptor){  
-    console.log(target);
-    console.log(key);
-
-    target[`key_${key}`] = "sdkljfsdjkldjklfsfdjkl";
-    target.isThing = "Jordan";
-}
-
 @BotBoiler.injectable()
 export default class alarmBot extends 
     BotBoiler.BotService<AlarmUser, AlarmConversation> {
@@ -46,12 +37,7 @@ export default class alarmBot extends
     ) {
         super();
        
-    }
-
-    @someDecorator
-    public desc(value:string){
-        console.log("This is in the regular function: " + value);
-    }
+    }   
 
     public boot() {
         super.boot();
@@ -63,19 +49,14 @@ export default class alarmBot extends
             
             try{
                 var dialogResult:boolean = await this.runDialogs(context, utterance);
+                if(!dialogResult){
+                    context.sendActivity("I'm a simple alarm bot. But I'm composable, testable and inejctable!")
+                }
             }catch(e)
             {
                 console.log(e);
-            }
-            
-            
-            console.log(dialogResult);
+            } 
            
-            //     var state = this.stateService.getConversationState(context);
-
-            // const count = state.count === undefined ? state.count = 0 : ++state.count;
-
-            // await context.sendActivity(`${count} You said Jordan "${context.activity.text}"`);
         } else {
             await context.sendActivity(`[${context.activity.type} event detected]`);
         }
