@@ -50,7 +50,7 @@ export default class alarmBot extends
             try{
                 var dialogResult:boolean = await this.runDialogs(context, utterance);
                 if(!dialogResult){
-                    context.sendActivity("I'm a simple alarm bot. But I'm composable, testable and inejctable!")
+                    context.sendActivity("I'm a simple alarm bot. But I'm composable, testable and injectable!")
                 }
             }catch(e)
             {

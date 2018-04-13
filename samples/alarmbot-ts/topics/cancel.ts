@@ -4,7 +4,7 @@ import { AlarmUser, AlarmConversation, Alarm } from "../alarmBot";
 
 
 export default class cancel
-    extends BotBoiler.BotStateBase<AlarmUser, AlarmConversation>
+    extends BotBoiler.BotBase<AlarmUser, AlarmConversation>
     implements BotBoiler.Contracts.ITopic {
 
     id: string = 'cancel';

@@ -10,7 +10,8 @@ let contractSymbols = {
     IBotService: Symbol("IBotService"),
     IHostService: Symbol("IHostService"),
     Storage: Symbol("Storage"),
-    IStateService: Symbol("IStateService")
+    IStateService: Symbol("IStateService"), 
+    Startup: Symbol("Startup")
 }
 
 export interface DialogContext extends DialogContext<TurnContext> {
@@ -29,9 +30,12 @@ export interface IBotDialog extends Dialog<TurnContext>{
 
 }
 
-export interface IDialog {
-    id: string;
-    trigger?: string | RegExp;
+export interface IIntent{
+    trigger?: string|RegExp
+}
+
+export interface IDialog extends IIntent {
+    id: string;    
     waterfall?: IDialogWaterfallStep[];
     dialog?: IBotDialog
     init?: () => void;

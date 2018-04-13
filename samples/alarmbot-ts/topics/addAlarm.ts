@@ -6,11 +6,25 @@ import { AlarmUser, AlarmConversation, Alarm } from "../alarmBot";
 
 
 export default class addAlarm extends 
-    BotBoiler.BotStateBase<AlarmUser, AlarmConversation> 
+    BotBoiler.BotBase<AlarmUser, AlarmConversation> 
     implements BotBoiler.Contracts.ITopic{
-
+       
     id: string = 'addAlarm';
     trigger:RegExp = /add alarm/gi;
+
+    
+
+    private _alarmDialog:BotBoiler.Contracts.IDialog;
+    /**
+     *
+     */
+    constructor(
+            @BotBoiler.inject("dialogs") @BotBoiler.named("alarmDialog") 
+            alarmDialog:BotBoiler.Contracts.IDialog) {
+        super();
+     
+        this._alarmDialog = alarmDialog;
+    }
 
     @BotBoiler.Decorators.Topic
     public async begin(context: BotBoiler.BotBuilder.TurnContext): Promise<boolean> {
@@ -53,11 +67,9 @@ export default class addAlarm extends
         const conversation = this.stateService.getConversationState(context);
         const alarm = conversation.alarm;
         if (alarm.title === undefined) {
-            conversation.prompt = 'title';
-            await context.sendActivity(`What would you like to call your alarm?`);
-        } else if (alarm.time === undefined) {
-            conversation.prompt = 'time';
-            await context.sendActivity(`What time would you like to set the "${alarm.title}" alarm for?`);
+            //conversation.prompt = 'title';
+            //await context.sendActivity(`What would you like to call your alarm?`);
+            await this.Bot.RunDialog(this._alarmDialog, context);        
         } else {
             // Alarm completed so set alarm.
             const user = this.stateService.getUserState(context);
@@ -66,9 +78,6 @@ export default class addAlarm extends
     
             // TODO: set alarm
     
-            // Notify user and cleanup topic state
-            conversation.topic = undefined;
-            conversation.alarm = undefined;
             conversation.prompt = undefined;
             await context.sendActivity(`Your alarm named "${alarm.title}" is set for "${alarm.time}".`);
             return false;

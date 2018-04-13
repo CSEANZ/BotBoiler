@@ -4,7 +4,7 @@ import { AlarmUser, AlarmConversation, Alarm } from "../alarmBot";
 
 @BotBoiler.injectable()
 export default class showAlarms
-    extends BotBoiler.BotStateBase<AlarmUser, AlarmConversation>
+    extends BotBoiler.BotBase<AlarmUser, AlarmConversation>
     implements BotBoiler.Contracts.ITopic {
 
     id: string = 'showAlarms';

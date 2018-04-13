@@ -32,7 +32,7 @@ export interface AlarmUser {
 
 
 @BotBoiler.injectable()
-export default class AlarmBot extends BotBoiler.BotService<AlarmUser, AlarmConversation> {
+export default class AlarmBot extends BotBoiler.BoilerBot<AlarmUser, AlarmConversation> {
 
     
     constructor(
@@ -53,6 +53,12 @@ export default class AlarmBot extends BotBoiler.BotService<AlarmUser, AlarmConve
             const utterance = (context.activity.text || '').trim().toLowerCase();
             
             await context.sendActivity("Testing 123");
+
+            var resultDialogs = await this.runDialogs(context, utterance);
+            
+            if(result){
+                return;
+            }
             var result = await this.runTopics(context, utterance);
             
             if(!result){

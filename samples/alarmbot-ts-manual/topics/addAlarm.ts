@@ -1,10 +1,10 @@
-import { botStateBase } from "../../../src/system/services/botStateBase";
+import { botStateBase } from "../../../src/system/services/botBase";
 import { AlarmUser, AlarmConversation, Alarm } from "../alamBot";
 import { TurnContext } from "botbuilder";
 import { ITopic } from "../../../src/system/contracts/systemContracts";
 
 
-export default class addAlarm extends botStateBase<AlarmUser, AlarmConversation> implements ITopic{
+export default class addAlarm extends BotBase<AlarmUser, AlarmConversation> implements ITopic{
 
     public async begin(context: TurnContext): Promise<any> {
         // Set topic and initialize empty alarm

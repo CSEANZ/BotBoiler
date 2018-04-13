@@ -4,13 +4,11 @@ import * as moment from 'moment';
 
 
 @BotBoiler.injectable()
-@BotBoiler.Decorators.Intent(/add alarm/gi)
+
 export default class alarmDialog 
     extends BotBoiler.DialogBase<AlarmBot.AlarmUser, AlarmBot.AlarmConversation>{
     
     public id: string = "alarmDialog";   
-    //public trigger: RegExp =  /add alarm/gi;
-
    
     public get waterfall(): BotBoiler.Contracts.IDialogWaterfallStep[]{
         return [this.step1.bind(this), this.step2.bind(this), this.step3.bind(this)];
@@ -24,7 +22,7 @@ export default class alarmDialog
      */
     public async step1(dc:BotBoiler.BotBuilder.DialogContext<BotBoiler.BotBuilder.TurnContext>){
         dc.instance.state = {} as AlarmBot.Alarm;
-        await dc.prompt('titlePrompt', `What would you like to call your alarm?`);
+        await dc.prompt('titlePrompt', `Dialog: What would you like to call your alarm?`);
     }
 
     /**
@@ -38,7 +36,7 @@ export default class alarmDialog
          // Save alarm title and prompt for time
          const alarm = dc.instance.state as AlarmBot.Alarm;
          alarm.title = args;
-         await dc.prompt('timePrompt', `What time would you like to set the "${alarm.title}" alarm for?`);
+         await dc.prompt('timePrompt', `Dialog: What time would you like to set the "${alarm.title}" alarm for?`);
     }
 
     public async step3(dc:BotBoiler.BotBuilder.DialogContext<BotBoiler.BotBuilder.TurnContext>, args:any){
@@ -51,10 +49,14 @@ export default class alarmDialog
         if(!user.alarms){
             user.alarms = [];
         }
+
         user.alarms.push(alarm);
         
-        // Confirm to user
-        await dc.context.sendActivity(`Your alarm named "${alarm.title}" is set for "${moment(alarm.time).format("ddd, MMM Do, h:mm a")}".`);
+        const conversation = this.stateService.getConversationState(dc.context);
+        conversation.alarm = alarm;
+
+        // // Confirm to user
+        // await dc.context.sendActivity(`Your alarm named "${alarm.title}" is set for "${moment(alarm.time).format("ddd, MMM Do, h:mm a")}".`);
         await dc.end();
     }
 

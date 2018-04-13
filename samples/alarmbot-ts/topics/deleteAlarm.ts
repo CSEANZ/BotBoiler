@@ -7,7 +7,7 @@ import showAlarms from "./showAlarms";
 
 
 export default class deleteAlarm
-    extends BotBoiler.BotStateBase<AlarmUser, AlarmConversation>
+    extends BotBoiler.BotBase<AlarmUser, AlarmConversation>
     implements BotBoiler.Contracts.ITopic {
 
     id: string = 'deleteAlarm';
@@ -22,7 +22,8 @@ export default class deleteAlarm
         super();
         this._showAlarms = showAlarms;
     }
-
+    
+    @BotBoiler.Decorators.Topic
     public async begin(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
         const conversation = this.stateService.getConversationState(context);
         conversation.topic = undefined;
@@ -36,6 +37,7 @@ export default class deleteAlarm
         }
     }
 
+    @BotBoiler.Decorators.Topic
     public async routeReply(context: BotBoiler.BotBuilder.TurnContext): Promise<any> {
         // Validate users reply and delete alarm
         let deleted = false;

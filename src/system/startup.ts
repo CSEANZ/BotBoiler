@@ -9,7 +9,7 @@ import * as contracts from "./contracts/systemContracts";
 import { configBase } from "./services/serviceBase";
 import { serverHelper } from "./helpers/serverHelper";
 import { logService } from "./services/logService";
-import BotService from "./services/botService";
+import BoilerBot from "./services/boilerBot";
 
 
 import { consoleHostService } from "./services/hosting/consoleHostService";
@@ -28,6 +28,9 @@ export default class Startup {
      */
     constructor() {
         this._container = new Container();
+
+        this.BindInstance<Startup>(this, contracts.contractSymbols.Startup);     
+
         Startup.Container = this._container;
         configBase.Container = this._container;
         this._setupSystemServices();
@@ -35,11 +38,11 @@ export default class Startup {
     }
 
     public Boot(): Startup {
-        this.botService.boot();
+        this.Bot.boot();
         return this;
     }
 
-    public get botService(): contracts.IBotService {
+    public get Bot(): contracts.IBotService {
         return this.Resolve<contracts.IBotService>(contracts.contractSymbols.IBotService);
     }
 
@@ -119,6 +122,7 @@ export default class Startup {
                 }
 
                 binder.whenTargetNamed(i);
+              
             }
         }   
         if(addFactory){
@@ -153,8 +157,7 @@ export default class Startup {
         return this;
     }
 
-    public BindInstance<TInterface>(classType: TInterface, symbol: symbol, 
-            singleton: boolean = false) : Startup {
+    public BindInstance<TInterface>(classType: TInterface, symbol: symbol) : Startup {
         var bind = this._container.bind<TInterface>(symbol)
             .toConstantValue(classType);
         return this;
@@ -173,6 +176,12 @@ export default class Startup {
     }
 
     public Resolve<T>(symbol: symbol, group?:string, name?:string) {
+        if(group && name){
+            if(this._container.isBound(group)){                
+                return this._container.getNamed<T>(group, name);               
+            }
+        }
+        
         return this._container.get<T>(symbol);
     } 
     

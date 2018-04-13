@@ -8,15 +8,33 @@ import { StateHost } from "../../botboiler";
 import { TextPrompt, DatetimePrompt, Prompt, AttachmentPrompt, ChoicePrompt, ConfirmPrompt } from "botbuilder-dialogs";
 
 
- function BoilerPromptBase(prompt: { new(...args: any[]): any; }, 
-        target, propertyKey: string, descriptor: PropertyDescriptor)
-    {
-    
-    var getter = function (): contracts.IBotDialog {       
+export function Intent(intent:string|RegExp){
+    return function(target){
+        var getter = function():string|RegExp{
+            return intent;
+        }
+        Object.defineProperty(target.prototype, "trigger", {get: getter});
+    }
+}
+
+export function IntentMethod(intent:string|RegExp){
+    return function(target, propertyKey: string, descriptor: PropertyDescriptor){
+        var getter = function():string|RegExp{
+            return intent;
+        }
+        Object.defineProperty(target, "trigger", {get: getter});
+    }
+}
+
+
+function BoilerPromptBase(prompt: { new(...args: any[]): any; },
+    target, propertyKey: string, descriptor: PropertyDescriptor) {
+
+    var getter = function (): contracts.IBotDialog {
         return new prompt(target[propertyKey]);
     }
 
-    Object.defineProperty(target, "dialog", { get: getter });    
+    Object.defineProperty(target, "dialog", { get: getter });
 }
 
 /**
@@ -28,7 +46,7 @@ import { TextPrompt, DatetimePrompt, Prompt, AttachmentPrompt, ChoicePrompt, Con
  * @param {PropertyDescriptor} descriptor 
  */
 export function BoilerAttachmentPrompt(target, propertyKey: string, descriptor: PropertyDescriptor) {
-    BoilerPromptBase(AttachmentPrompt, target, propertyKey, descriptor);     
+    BoilerPromptBase(AttachmentPrompt, target, propertyKey, descriptor);
 }
 
 /**
@@ -40,7 +58,7 @@ export function BoilerAttachmentPrompt(target, propertyKey: string, descriptor: 
  * @param {PropertyDescriptor} descriptor 
  */
 export function BoilerChoicePrompt(target, propertyKey: string, descriptor: PropertyDescriptor) {
-    BoilerPromptBase(ChoicePrompt, target, propertyKey, descriptor);     
+    BoilerPromptBase(ChoicePrompt, target, propertyKey, descriptor);
 }
 
 /**
@@ -52,7 +70,7 @@ export function BoilerChoicePrompt(target, propertyKey: string, descriptor: Prop
  * @param {PropertyDescriptor} descriptor 
  */
 export function BoilerConfirmPrompt(target, propertyKey: string, descriptor: PropertyDescriptor) {
-    BoilerPromptBase(ConfirmPrompt, target, propertyKey, descriptor);     
+    BoilerPromptBase(ConfirmPrompt, target, propertyKey, descriptor);
 }
 
 /**
@@ -64,7 +82,7 @@ export function BoilerConfirmPrompt(target, propertyKey: string, descriptor: Pro
  * @param {PropertyDescriptor} descriptor 
  */
 export function BoilerNumberPrompt(target, propertyKey: string, descriptor: PropertyDescriptor) {
-    BoilerPromptBase(ConfirmPrompt, target, propertyKey, descriptor);     
+    BoilerPromptBase(ConfirmPrompt, target, propertyKey, descriptor);
 }
 
 
@@ -77,7 +95,7 @@ export function BoilerNumberPrompt(target, propertyKey: string, descriptor: Prop
  * @param {PropertyDescriptor} descriptor 
  */
 export function BoilerDatetimePrompt(target, propertyKey: string, descriptor: PropertyDescriptor) {
-    BoilerPromptBase(DatetimePrompt, target, propertyKey, descriptor);     
+    BoilerPromptBase(DatetimePrompt, target, propertyKey, descriptor);
 }
 
 /**
@@ -89,33 +107,37 @@ export function BoilerDatetimePrompt(target, propertyKey: string, descriptor: Pr
  * @param {PropertyDescriptor} descriptor 
  */
 export function BoilerTextPrompt(target, propertyKey: string, descriptor: PropertyDescriptor) {
-    BoilerPromptBase(TextPrompt, target, propertyKey, descriptor); 
+    BoilerPromptBase(TextPrompt, target, propertyKey, descriptor);
 }
 
+function _getBoilerConfig(context:TurnContext): any{
+    var state = StateHost.ConversationState;
+
+    var convState = state.get(context);
+
+    if (!convState._botboiler) {
+        convState._botboiler = {};
+    }
+
+    return convState._botboiler;
+
+}
 
 export function Topic(target, propertyKey: string, descriptor: PropertyDescriptor) {
     var fn = descriptor.value;
 
-    descriptor.value = async function (context: TurnContext) {
+    descriptor.value = async function (context: TurnContext) {        
 
-        var state = StateHost.ConversationState;
+        var _botboiler = _getBoilerConfig(context);    
 
-        var convState = state.get(context);
-
-        if (!convState._botboiler) {
-            convState._botboiler = {};
-        }
-
-        convState._botboiler.topic = this.id;
-
-        console.log(convState._botboiler);
+        _botboiler.topic = this.id;        
 
         var keepOpen = await fn.call(this, context);
 
         if (!keepOpen) {
             //var convState = state.get(context);
 
-            convState._botboiler.topic = undefined;
+            _botboiler.topic = undefined;
 
             console.log("Closing the topic");
             //  console.log(convState._botboiler);
