@@ -41,7 +41,7 @@ export default class addAlarm extends
     public async routeReply(context: BotBoiler.BotBuilder.TurnContext): Promise<boolean> {
         // Handle users reply to prompt
         
-        const conversation = this.stateService.getConversationState(context);
+        const conversation = this.Conversation;
         const utterance = context.activity.text.trim();
         switch (conversation.prompt) {
             case 'title':
@@ -72,7 +72,7 @@ export default class addAlarm extends
             await this.Bot.RunDialog(this._alarmDialog, context);        
         } else {
             // Alarm completed so set alarm.
-            const user = this.stateService.getUserState(context);
+            const user = this.User;
             if (!user.alarms) { user.alarms = [] }
             user.alarms.push(alarm as Alarm);
     

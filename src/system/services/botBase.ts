@@ -3,7 +3,7 @@ import { injectable, inject } from "inversify";
 import * as contracts from "../contracts/systemContracts";
 import { serviceBase } from "./serviceBase";
 
-import { BotStateSet, BotFrameworkAdapter, TurnContext } from 'botbuilder';
+import { BotStateSet, BotFrameworkAdapter, TurnContext, ConversationState, UserState } from 'botbuilder';
 import BoilerBot from './boilerBot';
 
 
@@ -21,13 +21,39 @@ export default abstract class BotBase<TUserState, TConversationState> extends se
     
     private _bot: BoilerBot<TUserState, TConversationState>;
 
-    public get Bot():BoilerBot<TUserState, TConversationState>{
-        return this._bot;
+    private _conversationState: TConversationState;
+    private _userState: TUserState;
+
+    public ContextConfig(context:TurnContext){
+        this.Conversation = this.stateService.getConversationState(context);
+        this.User = this.stateService.getUserState(context);
+    }
+
+    public get Conversation():TConversationState{
+        return this._conversationState;
+    }
+
+    public set Conversation(state: TConversationState){
+        this._conversationState = state;
+    }
+
+    public get User():TUserState{
+        return this._userState;
+    }
+
+    public set User(state: TUserState){
+        this._userState = state;
     }
 
     public set Bot(bot:BoilerBot<TUserState, TConversationState>){
         this._bot = bot;
     }
+
+    public get Bot():BoilerBot<TUserState, TConversationState>{
+        return this._bot;
+    }
+
+   
 
 }
 

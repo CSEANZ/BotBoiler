@@ -68,6 +68,13 @@ export default abstract class BoilerBot<TUserState, TConversationState>
         }
     }
 
+    private _prepBot(botItem:any, context:TurnContext){
+        if(botItem.ContextConfig){
+            var cast:BotBase<TUserState, TConversationState> = botItem;
+            cast.ContextConfig(context);
+        }
+    }
+
     protected async runTopics(context: TurnContext, intent: string) {
         var convState: any = this.stateService.getConversationState(context);
 
@@ -75,10 +82,14 @@ export default abstract class BoilerBot<TUserState, TConversationState>
 
             var topic: contracts.ITopic = this._topics[t];
 
+            this._prepBot(topic, context);
+
             var trigger = topic.trigger;
 
             if (convState._botboiler && convState._botboiler.topic === topic.id) {
+
                 await topic.routeReply(context);
+                
                 return true;
             }
 
@@ -125,6 +136,7 @@ export default abstract class BoilerBot<TUserState, TConversationState>
             const dc = this._dialogSet.createContext(context, convState);
 
             if (dc.instance) {
+                this._prepBot(dc.instance, context);
                 await dc.continue();
                 if (context.responded) {
                     return true;
@@ -135,6 +147,7 @@ export default abstract class BoilerBot<TUserState, TConversationState>
             for (var i in this._dialogs) {
                 var dialog: any = this._dialogs[i];
                 var trigger = dialog.trigger;
+                this._prepBot(dialog, context);
 
                 if (trigger) {
 
@@ -171,6 +184,7 @@ export default abstract class BoilerBot<TUserState, TConversationState>
         this._dialogs = this.dialogFactory();
 
         for (var i in this._dialogs) {
+           
             var dialog = this._dialogs[i];
             dialog.Bot = this;
             if (dialog.waterfall) {
