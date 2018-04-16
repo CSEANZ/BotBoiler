@@ -1,6 +1,6 @@
 import { TurnContext, ConversationState } from "botbuilder";
 import { ITopic } from "../contracts/systemContracts";
-import Startup from "../Startup";
+import Startup from "../startup";
 
 import { IStorage } from "../services/extensios/MemoryStorageEx";
 import * as contracts from "../contracts/systemContracts";

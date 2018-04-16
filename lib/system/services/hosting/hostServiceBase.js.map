@@ -1,0 +1,1 @@
+{"version":3,"file":"hostServiceBase.js","sourceRoot":"","sources":["../../../../src/system/services/hosting/hostServiceBase.ts"],"names":[],"mappings":";;AAIA,gDAAyD;AACzD,2CAAqE;AAKrE,qBAAsC,SAAQ,wBAAU;IAKpD;QACI,KAAK,EAAE,CAAC;IACZ,CAAC;IAEM,IAAI;QACP,IAAI,CAAC,WAAW,GAAG,IAAI,wBAAW,EAAE,CAAC;QACtC,gEAAgE;IACnE,CAAC;CAGJ;AAfD,0CAeC"}
