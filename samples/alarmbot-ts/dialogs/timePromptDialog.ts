@@ -9,7 +9,7 @@ export default class implements BotBoiler.Contracts.IDialog {
     public id: string = "timePrompt";
     public trigger: string = "";   
 
-    @BotBoiler.Decorators.BoilerDatetimePrompt
+    @BotBoiler.Decorators.BoilerDatetimePrompt()
     public async prompt(context:TurnContext,
         values: FoundDatetime[]) : Promise<Date>{
         try {
