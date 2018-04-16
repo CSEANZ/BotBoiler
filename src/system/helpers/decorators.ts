@@ -28,13 +28,19 @@ export function IntentMethod(intent:string|RegExp){
 
 
 function BoilerPromptBase(prompt: { new(...args: any[]): any; },
-    target, propertyKey: string, descriptor: PropertyDescriptor) {
+    target, propertyKey: string, descriptor: PropertyDescriptor, retries:number = 3) {
 
     var getter = function (): contracts.IBotDialog {
         return new prompt(target[propertyKey]);
     }
 
     Object.defineProperty(target, "dialog", { get: getter });
+
+    var getretries = function (): number {
+        return retries;
+    } 
+
+    Object.defineProperty(target, "retries", { get: getretries });   
 }
 
 /**
@@ -94,8 +100,11 @@ export function BoilerNumberPrompt(target, propertyKey: string, descriptor: Prop
  * @param {string} propertyKey 
  * @param {PropertyDescriptor} descriptor 
  */
-export function BoilerDatetimePrompt(target, propertyKey: string, descriptor: PropertyDescriptor) {
-    BoilerPromptBase(DatetimePrompt, target, propertyKey, descriptor);
+
+export function BoilerDatetimePrompt(retries:number = 2) {
+    return function(target, propertyKey: string, descriptor: PropertyDescriptor){
+        BoilerPromptBase(DatetimePrompt, target, propertyKey, descriptor);
+    }   
 }
 
 /**
