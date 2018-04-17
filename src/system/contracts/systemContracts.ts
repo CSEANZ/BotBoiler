@@ -30,6 +30,8 @@ export interface IBotDialog extends Dialog<TurnContext>{
 
 }
 
+
+
 export interface IIntent{
     trigger?: string|RegExp
 }

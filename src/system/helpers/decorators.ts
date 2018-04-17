@@ -5,7 +5,7 @@ import Startup from "../startup";
 import { IStorage } from "../services/extensios/MemoryStorageEx";
 import * as contracts from "../contracts/systemContracts";
 import { StateHost } from "../../botboiler";
-import { TextPrompt, DatetimePrompt, Prompt, AttachmentPrompt, ChoicePrompt, ConfirmPrompt } from "botbuilder-dialogs";
+import { TextPrompt, DatetimePrompt, Prompt, AttachmentPrompt, ChoicePrompt, ConfirmPrompt, NumberPrompt } from "botbuilder-dialogs";
 
 
 export function Intent(intent:string|RegExp){
@@ -88,7 +88,7 @@ export function BoilerConfirmPrompt(target, propertyKey: string, descriptor: Pro
  * @param {PropertyDescriptor} descriptor 
  */
 export function BoilerNumberPrompt(target, propertyKey: string, descriptor: PropertyDescriptor) {
-    BoilerPromptBase(ConfirmPrompt, target, propertyKey, descriptor);
+    BoilerPromptBase(NumberPrompt, target, propertyKey, descriptor);
 }
 
 
@@ -136,6 +136,11 @@ export function Topic(target, propertyKey: string, descriptor: PropertyDescripto
     var fn = descriptor.value;
 
     descriptor.value = async function (context: TurnContext) {        
+
+        var state = StateHost.ConversationState;
+        
+        var convState = state.get(context);
+        var userState =  StateHost.UserState.get(context);
 
         var _botboiler = _getBoilerConfig(context);    
 

@@ -1,38 +1,29 @@
 import * as BotBoiler from '../../src/botboiler';
 
-import cancel from "./topics/cancel";
-import showAlarms from "./topics/showAlarms";
-
-let alarmBotSymbols = {
+let botSymbols = {
     topics: "topics"
 }
+export { botSymbols };
 
-let alarmBotTopics = {
-    topics: "topics"
+export interface Guess {
+    guessnumber: string;    
 }
 
-export { alarmBotSymbols };
-
-export interface Alarm {
-    title: string;
-    time: string;
-}
-
-export interface AlarmConversation {
+export interface GuessConverstaion {
     topic?: string;
-    alarm?: Partial<Alarm>;
-    prompt?: string;
-    count: number;
+    guesstargetnumber?: number;
+    currentguess?: number;
+    guesscount: number;
 }
 
-export interface AlarmUser {
-    alarms: Alarm[];
+export interface GuessUser {
+   
     count: number;
 }
 
 
 @BotBoiler.injectable()
-export default class AlarmBot extends BotBoiler.BoilerBot<AlarmUser, AlarmConversation> {
+export default class GuessBot extends BotBoiler.BoilerBot<GuessUser, GuessConverstaion> {
 
     
     constructor(
@@ -51,18 +42,17 @@ export default class AlarmBot extends BotBoiler.BoilerBot<AlarmUser, AlarmConver
     public async botCallback(context: BotBoiler.BotBuilder.TurnContext) {
         if (context.activity.type === 'message') {
             const utterance = (context.activity.text || '').trim().toLowerCase();
-            
-            await context.sendActivity("Testing 123");
 
             var resultDialogs = await this.runDialogs(context, utterance);
             
             if(result){
                 return;
             }
+
             var result = await this.runTopics(context, utterance);
             
             if(!result){
-                await context.sendActivity("Hi there, I'm Alarmy.");
+                await context.sendActivity("Hi there, I'm Guessy.");
             }else{
                 //await context.sendActivity("...");
             }

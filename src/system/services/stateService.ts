@@ -12,6 +12,7 @@ import { IStorage } from "./extensios/MemoryStorageEx";
 export class StateHost{
     public static BotStateSet:BotStateSet;
     public static ConversationState:ConversationState; 
+    public static UserState:UserState; 
 }
 
 @injectable()
@@ -31,6 +32,7 @@ export default class StateService<TUserState, TConversationState>
         this._userState = new UserState<TUserState>(this._storage.Storage);
 
         StateHost.ConversationState = this._conversationState;
+        StateHost.UserState = this._userState;
         
     }
 

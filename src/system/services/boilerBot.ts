@@ -85,18 +85,20 @@ export default abstract class BoilerBot<TUserState, TConversationState>
             this._prepBot(topic, context);
 
             var trigger = topic.trigger;
-
+           
             if (convState._botboiler && convState._botboiler.topic === topic.id) {
 
-                await topic.routeReply(context);
-                
+                await topic.routeReply(context);                
                 return true;
-            }
+            }            
 
             if (trigger) {
-                if (trigger instanceof RegExp) {
+              
+                //console.log(`Match: ${trigger.test(intent)}`);
+                if (trigger instanceof RegExp) {                  
+                    
                     if (trigger.test(intent)) {
-
+                        
                         await topic.begin(context);
                         return true;
                     }
@@ -135,7 +137,8 @@ export default abstract class BoilerBot<TUserState, TConversationState>
 
             const dc = this._dialogSet.createContext(context, convState);
 
-            if (dc.instance) {                
+            if (dc.instance) {
+                          ;   
                 this._prepBot(dc.instance, context);
                 await dc.continue();
                 if (context.responded) {
