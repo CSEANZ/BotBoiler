@@ -12,6 +12,10 @@ export default class implements BotBoiler.Contracts.IDialog {
     @BotBoiler.Decorators.BoilerNumberPrompt
     public async prompt(context: TurnContext,
         value: number): Promise<number> {
-        return value;
+            if(value > 10 || value < 0){
+                await context.sendActivity("Nope - not in range");
+                return undefined;
+            }
+            return value;
     }
 }

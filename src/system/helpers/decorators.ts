@@ -7,7 +7,13 @@ import * as contracts from "../contracts/systemContracts";
 import { StateHost } from "../../botboiler";
 import { TextPrompt, DatetimePrompt, Prompt, AttachmentPrompt, ChoicePrompt, ConfirmPrompt, NumberPrompt } from "botbuilder-dialogs";
 
-
+/**
+ * This is a cool decorator
+ * 
+ * @export
+ * @param {(string|RegExp)} intent 
+ * @returns 
+ */
 export function Intent(intent:string|RegExp){
     return function(target){
         var getter = function():string|RegExp{

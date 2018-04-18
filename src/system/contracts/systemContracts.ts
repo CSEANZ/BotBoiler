@@ -11,7 +11,8 @@ let contractSymbols = {
     IHostService: Symbol("IHostService"),
     Storage: Symbol("Storage"),
     IStateService: Symbol("IStateService"), 
-    Startup: Symbol("Startup")
+    Startup: Symbol("Startup"),
+    INetClient: Symbol("INetClient")
 }
 
 export interface DialogContext extends DialogContext<TurnContext> {
@@ -30,7 +31,9 @@ export interface IBotDialog extends Dialog<TurnContext>{
 
 }
 
-
+export interface INetClient{
+    postJson<TUpload, TResult>(url:string, path:string, postData:TUpload, headers?:any):Promise<TResult>;
+}
 
 export interface IIntent{
     trigger?: string|RegExp

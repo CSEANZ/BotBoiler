@@ -138,7 +138,7 @@ export default abstract class BoilerBot<TUserState, TConversationState>
             const dc = this._dialogSet.createContext(context, convState);
 
             if (dc.instance) {
-                          ;   
+                  
                 this._prepBot(dc.instance, context);
                 await dc.continue();
                 if (context.responded) {
