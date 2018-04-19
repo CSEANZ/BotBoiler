@@ -6,7 +6,7 @@ import * as Decorators  from "./system/helpers/decorators";
 import BoilerBot from "./system/services/boilerBot";
 import StateService, {StateHost} from "./system/services/stateService";
 import BotBase from "./system/services/botBase";
-
+import {SimpleValidator} from './system/helpers/simpleValidators';
 
 import { injectable, inject, named } from "inversify";
 
@@ -25,5 +25,6 @@ export {
     injectable, 
     inject,
     named,
-    BotBuilder
+    BotBuilder,
+    SimpleValidator
 };

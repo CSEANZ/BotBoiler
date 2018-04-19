@@ -45,6 +45,7 @@ export default class BuyBot extends BotBoiler.BoilerBot<BotUserState, BotConvSta
     }
 
     public async botCallback(context: BotBoiler.BotBuilder.TurnContext) {
+       
         if (context.activity.type === 'message') {
             const utterance = (context.activity.text || '').trim().toLowerCase();
 

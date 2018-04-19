@@ -1,6 +1,7 @@
 import * as BotBoiler from '../../../src/botboiler';
 import * as buyBot from "../buyBot";
 import { buyForm } from '../buyBot';
+import { PromptValidator } from 'botbuilder-dialogs';
 
 
 export default class buyTopic extends
@@ -150,22 +151,22 @@ export default class buyTopic extends
                 await this.Context.sendActivity(prompt);
                 return false;
             } else {
+                
+                
 
                 switch (type) {
                     case "number":
-                        if (isNaN(Number.parseFloat(this.Context.activity.text))) {
+                        if(!BotBoiler.SimpleValidator.Number(this.Context.activity.text)){
                             await this.Context.sendActivity(error);
                             return false;
-                        }
-
+                        }                       
                         break;
                     case "choice":
-                        console.log(type);
-                        if (choices &&
-                            choices.toLowerCase().indexOf(this.Context.activity.text.toLowerCase()) == -1) {
+
+                         if(!BotBoiler.SimpleValidator.Choices(this.Context.activity.text, choices)){
                             await this.Context.sendActivity(error);
                             return false;
-                        }
+                        } 
                         break;
                     default:
 
