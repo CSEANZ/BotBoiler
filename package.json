@@ -9,6 +9,8 @@
     "prewatch": "typings install",
     "watch": "tsc -w --project ./src/tsconfig.json",
     "run": "nodemon ./lib/app.js --delay .5",
+    "watchformsample": "tsc -w --project ./samples/formfill-ts/tsconfig.json",
+    "runformsample": "nodemon ./output/samples/samples/formfill-ts/app.js --delay .5",
     "watchalarmbotsample": "tsc -w --project ./samples/alarmbot-ts/tsconfig.json",
     "runalarmbotsample": "nodemon ./output/samples/samples/alarmbot-ts/app.js --delay .5",
     "watchguessbotsample": "tsc -w --project ./samples/numbergame-ts/tsconfig.json",

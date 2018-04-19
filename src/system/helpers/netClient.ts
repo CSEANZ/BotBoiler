@@ -27,4 +27,27 @@ export class netClient implements contracts.INetClient{
             })
         });
     }
+
+    public async getJson<TResult>(url:string, path:string, headers?:any):Promise<TResult>{
+        return new Promise<TResult>((good, bad)=>{
+            
+            var clientOptions:restify.ClientOptions = {
+                url: url
+            }
+
+            if(headers){
+                clientOptions.headers = headers;
+            }
+            
+            var jsonClient = restify.createJsonClient(clientOptions); 
+           
+            jsonClient.get(path, (err, req, res, obj: TResult)=>{
+                if(err){
+                    bad(err);
+                    return;
+                }
+                good(obj);
+            })
+        });
+    }
 }

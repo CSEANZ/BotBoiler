@@ -104,7 +104,7 @@ export default class Startup {
     }
 
     public UseTopics(topics: {}): Startup {
-        this.BindAll<contracts.ITopic>("ITopic", true, false, topics);
+        this.BindAll<contracts.ITopic>("ITopic", false, false, topics);
         return this;
     }
 

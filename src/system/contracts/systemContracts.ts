@@ -33,6 +33,7 @@ export interface IBotDialog extends Dialog<TurnContext>{
 
 export interface INetClient{
     postJson<TUpload, TResult>(url:string, path:string, postData:TUpload, headers?:any):Promise<TResult>;
+    getJson<TResult>(url:string, path:string, headers?:any):Promise<TResult>;
 }
 
 export interface IIntent{
@@ -49,8 +50,8 @@ export interface IDialog extends IIntent {
 export interface ITopic {    
     id: string;
     trigger?: string | RegExp;
-    begin(context: TurnContext): Promise<any>,
-    routeReply(context: TurnContext): Promise<any>
+    begin(context?: TurnContext): Promise<any>,
+    routeReply(context?: TurnContext): Promise<any>
 }
 
 export interface IStateService<TUserState, TConversationState> {

@@ -33,9 +33,7 @@ export default abstract class BoilerBot<TUserState, TConversationState>
     public topicFactory: () => contracts.ITopic;
 
     private _dialogs: contracts.IDialog;
-    private _dialogSet = new DialogSet();
-
-    private _topics: contracts.ITopic;
+    public DialogSet = new DialogSet();    
 
     /**
      *
@@ -60,9 +58,9 @@ export default abstract class BoilerBot<TUserState, TConversationState>
     }
 
     private createTopics() {
-        this._topics = this.topicFactory();
-        for (var d in this._topics) {
-            var topic = this._topics[d];
+        var topics = this.topicFactory();
+        for (var d in topics) {
+            var topic = topics[d];
             topic.Bot = this;
             console.log(topic.id);
         }
@@ -77,19 +75,21 @@ export default abstract class BoilerBot<TUserState, TConversationState>
 
     protected async runTopics(context: TurnContext, intent: string) {
         var convState: any = this.stateService.getConversationState(context);
+        var topics = this.topicFactory();
+        
+        for (var t in topics) {
 
-        for (var t in this._topics) {
-
-            var topic: contracts.ITopic = this._topics[t];
+            var topic: contracts.ITopic = topics[t];
 
             this._prepBot(topic, context);
 
             var trigger = topic.trigger;
            
             if (convState._botboiler && convState._botboiler.topic === topic.id) {
-
-                await topic.routeReply(context);                
-                return true;
+                const conversation = this.stateService.getConversationState(context);
+              
+                return await topic.routeReply(context);             
+               
             }            
 
             if (trigger) {
@@ -115,17 +115,17 @@ export default abstract class BoilerBot<TUserState, TConversationState>
     public async RunDialog(dialog: any, context: TurnContext, force:boolean = false) {
         var convState: any = this.stateService.getConversationState(context);
 
-        const dc = this._dialogSet.createContext(context, convState);
+        const dc = this.DialogSet.createContext(context, convState);
 
-        if(!dc.instance || force){
-            await dc.begin(dialog.id);
+        if(!dc.instance || force){          
+            await dc.begin(dialog.id, {jordan:true});
         }       
     }
 
     public async PromptDialog(dialog: contracts.IDialog, prompt:string, context: TurnContext) {
         var convState: any = this.stateService.getConversationState(context);
 
-        const dc = this._dialogSet.createContext(context, convState);
+        const dc = this.DialogSet.createContext(context, convState);
 
         dc.prompt(dialog.id, prompt);
     }
@@ -135,7 +135,7 @@ export default abstract class BoilerBot<TUserState, TConversationState>
         try {
             var convState: any = this.stateService.getConversationState(context);
 
-            const dc = this._dialogSet.createContext(context, convState);
+            const dc = this.DialogSet.createContext(context, convState);
 
             if (dc.instance) {
                   
@@ -157,6 +157,7 @@ export default abstract class BoilerBot<TUserState, TConversationState>
                     if (trigger instanceof RegExp) {
                         if (trigger.test(intent)) {
                             await dc.begin(dialog.id);
+                            
                             return true;
                         }
                     } else {
@@ -191,10 +192,10 @@ export default abstract class BoilerBot<TUserState, TConversationState>
             var dialog = this._dialogs[i];
             dialog.Bot = this;
             if (dialog.waterfall) {
-                this._dialogSet.add(dialog.id, dialog.waterfall);
+                this.DialogSet.add(dialog.id, dialog.waterfall);
             } else if (dialog.dialog) {
                 var d = dialog.dialog;
-                this._dialogSet.add(dialog.id, dialog.dialog);
+                this.DialogSet.add(dialog.id, dialog.dialog);
             } else {
                 console.log(`**** warning dialog: ${i} does not implement waterfall or dialog`);
             }

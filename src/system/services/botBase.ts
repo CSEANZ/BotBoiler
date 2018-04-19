@@ -23,10 +23,20 @@ export default abstract class BotBase<TUserState, TConversationState> extends se
 
     private _conversationState: TConversationState;
     private _userState: TUserState;
+    private _turnContext: TurnContext;
 
     public ContextConfig(context:TurnContext){
         this.Conversation = this.stateService.getConversationState(context);
         this.User = this.stateService.getUserState(context);
+        this.Context = context;
+    }
+
+    public get Context():TurnContext{
+        return this._turnContext;
+    }
+
+    public set Context(state: TurnContext){
+        this._turnContext = state;
     }
 
     public get Conversation():TConversationState{

@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "noImplicitAny": false,
+        "sourceMap": true,        
+        "outDir": "../../output/samples",
+        "experimentalDecorators": true, 
+        "watch": false    
+    }
+}
