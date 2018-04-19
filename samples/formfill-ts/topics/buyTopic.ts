@@ -1,8 +1,6 @@
 import * as BotBoiler from '../../../src/botboiler';
 import * as buyBot from "../buyBot";
 import { buyForm } from '../buyBot';
-import textPromptDialog from '../dialogs/textPromptDialog';
-import collectFormItemDialog from '../dialogs/collectFormItemDialog';
 
 
 export default class buyTopic extends
@@ -25,6 +23,12 @@ export default class buyTopic extends
 
     }
 
+    /**
+     * setup base template from state
+     * 
+     * @private
+     * @memberof buyTopic
+     */
     private async _setup() {
         this._formTemplate = this.Conversation.formTemplate;
         // this._formTemplate = [{
@@ -51,32 +55,50 @@ export default class buyTopic extends
         // }];
     }
 
+    /**
+     * Gets the form template from the server and preps the state
+     * 
+     * @param {BotBoiler.BotBuilder.TurnContext} context 
+     * @returns {Promise<boolean>} 
+     * @memberof buyTopic
+     */
     @BotBoiler.Decorators.Topic
     public async begin(context: BotBoiler.BotBuilder.TurnContext): Promise<boolean> {
 
-        if(!this.Conversation.formTemplate){
-            this.Conversation.formTemplate = 
-            await this._netClient.getJson<buyForm[]>(
+        if (!this.Conversation.formTemplate) {
+            this.Conversation.formTemplate =
+                await this._netClient.getJson<buyForm[]>(
                     "https://19698aa3.ngrok.io/", "/services/prompts.json");
         }
-      
-        
+
+
         await this._setup();
 
-        // Set topic and initialize empty alarm
         this.Conversation.formfill = {};
-
 
 
         // Prompt for first field
         return await this.nextField();
     }
 
+    /**
+     * re-entry point for the topic
+     * 
+     * @returns {Promise<boolean>} 
+     * @memberof buyTopic
+     */
     @BotBoiler.Decorators.Topic
     public async routeReply(): Promise<boolean> {
         return await this.nextField();
     }
 
+
+    /**
+     * 
+     * check each field for satisfaction 
+     * @returns {Promise<boolean>} 
+     * @memberof buyTopic
+     */
     async nextField(): Promise<boolean> {
         await this._setup();
 
@@ -86,9 +108,9 @@ export default class buyTopic extends
 
             var template = this._formTemplate[i];
 
-            var sat = await this.satisfy(fill, 
-                template.id, 
-                template.prompt, 
+            var sat = await this.satisfy(fill,
+                template.id,
+                template.prompt,
                 template.response,
                 template.type,
                 template.errorPrompt,
@@ -103,7 +125,21 @@ export default class buyTopic extends
         return false;
     }
 
-    async satisfy(obj: any, field: string, prompt: string, response: string, type: string, error:string, choices?:string
+
+    /**
+     * Check each field from the template is satisfied. 
+     * 
+     * @param {*} obj 
+     * @param {string} field 
+     * @param {string} prompt 
+     * @param {string} response 
+     * @param {string} type 
+     * @param {string} error 
+     * @param {string} [choices] 
+     * @returns {Promise<boolean>} 
+     * @memberof buyTopic
+     */
+    async satisfy(obj: any, field: string, prompt: string, response: string, type: string, error: string, choices?: string
     ): Promise<boolean> {
 
         if (!obj[field]) {
@@ -114,11 +150,10 @@ export default class buyTopic extends
                 await this.Context.sendActivity(prompt);
                 return false;
             } else {
-                
+
                 switch (type) {
                     case "number":
-                   
-                       if(isNaN(Number.parseFloat(this.Context.activity.text))){
+                        if (isNaN(Number.parseFloat(this.Context.activity.text))) {
                             await this.Context.sendActivity(error);
                             return false;
                         }
@@ -126,16 +161,17 @@ export default class buyTopic extends
                         break;
                     case "choice":
                         console.log(type);
-                        if(choices && 
-                            choices.toLowerCase().indexOf(this.Context.activity.text.toLowerCase()) == -1){
-                                await this.Context.sendActivity(error);
-                                return false;
-                            }                      
+                        if (choices &&
+                            choices.toLowerCase().indexOf(this.Context.activity.text.toLowerCase()) == -1) {
+                            await this.Context.sendActivity(error);
+                            return false;
+                        }
                         break;
                     default:
 
                         break;
                 }
+                
                 await this.Context.sendActivity(response + " " + this.Context.activity.text);
                 obj[field] = this.Context.activity.text
 
