@@ -16,7 +16,8 @@ export interface buyForm{
 
 export interface BotConvState {
     formfill:{},
-    _conversationFlow:string
+    _conversationFlow:string,
+    formTemplate:buyForm[]
 
 }
 
